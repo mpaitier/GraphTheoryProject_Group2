@@ -19,3 +19,7 @@ void GraphAdjacencyList::printGraph() {
         std::cout << std::endl;
     }
 }
+
+int GraphAdjacencyList::degree(int v) {
+    return adjacencyList[v].size();
+}

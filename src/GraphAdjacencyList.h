@@ -15,6 +15,8 @@ public:
     void printGraph();
     int V;  //nbr de sommet
     vector<vector<int>> adjacencyList;
+
+    int degree(int v); // calcul du degré d'un sommet
 };
 
 
