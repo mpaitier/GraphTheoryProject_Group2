@@ -1,14 +1,17 @@
-//
-// Created by mpait on 21/11/2023.
-//
-
 #ifndef GRAPHTHEORYPROJECT_GROUP2_CONSTRUCTIVEHEURISTIC_H
 #define GRAPHTHEORYPROJECT_GROUP2_CONSTRUCTIVEHEURISTIC_H
 
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
 
-class ConstructiveHeuristic {
+#include "GraphAdjacencyList.h"
 
-};
+using namespace std;
+
+vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G);
 
 
 #endif //GRAPHTHEORYPROJECT_GROUP2_CONSTRUCTIVEHEURISTIC_H

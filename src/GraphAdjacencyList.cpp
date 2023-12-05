@@ -12,14 +12,23 @@ void GraphAdjacencyList::addEdge(int v, int w) {
 
 void GraphAdjacencyList::printGraph() {
     for (int i = 0; i < V; ++i) {
-        std::cout << "Sommet " << i << " : ";
+        cout << "Sommet " << i << " : ";
         for (const int &neighbor : adjacencyList[i]) {
-            std::cout << neighbor << " ";
+            cout << neighbor << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
 int GraphAdjacencyList::degree(int v) {
     return adjacencyList[v].size();
 }
+
+vector<int> GraphAdjacencyList::allDegrees(){
+    vector<int> tab;
+    for(int i=0; i<V; i++){
+        tab.push_back(degree(i));
+    }
+    return tab;
+}
+

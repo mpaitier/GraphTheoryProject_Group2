@@ -17,6 +17,7 @@ public:
     vector<vector<int>> adjacencyList;
 
     int degree(int v); // calcul du degré d'un sommet
+    vector<int> allDegrees();
 };
 
 
