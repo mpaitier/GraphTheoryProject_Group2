@@ -5,10 +5,8 @@
 #ifndef GRAPHTHEORYPROJECT_GROUP2_LOCALSEARCHHEURISTIC_H
 #define GRAPHTHEORYPROJECT_GROUP2_LOCALSEARCHHEURISTIC_H
 
+#include "GraphAdjacencyList.h"
 
-class LocalSearchHeuristic {
-
-};
-
+void LocalSearch(GraphAdjacencyList &graph, vector<int> &V1, vector<int> &V2);
 
 #endif //GRAPHTHEORYPROJECT_GROUP2_LOCALSEARCHHEURISTIC_H
