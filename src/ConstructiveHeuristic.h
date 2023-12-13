@@ -6,12 +6,13 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
 
 #include "GraphAdjacencyList.h"
 
 using namespace std;
 
 vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G);
-
+bool valPresent(vector<int> vector, int val);
 
 #endif //GRAPHTHEORYPROJECT_GROUP2_CONSTRUCTIVEHEURISTIC_H

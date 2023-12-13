@@ -8,84 +8,153 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
     for(int i=0; i<G.V; i++){
         allVertex.push_back(i);
     }
+
+    //TEST : verifie all vertex
+    cout << "allvertex : " ;
+    for(int i=0; i<allVertex.size(); i++){
+        cout << allVertex[i] << " ";
+    }
+    cout << endl;
+
     vector<int> V1;
     vector<int> V2;
     vector<vector<int>> vectors;
 
     //Ajout ds V1 sommet plus haut degré
-    //int vertexHighDegree = max_element(tabDegrees.begin(), tabDegrees.end());
     int vertexHighDegree = 0;
     for(int i=1; i<tabDegrees.size(); i++){
         if(tabDegrees[vertexHighDegree] < tabDegrees[i]){
             vertexHighDegree = i;       //prend le premier sommet le plus haut si egalite
         }
     }
+    //TEST : high vertex
+    cout << "high vertex : " << vertexHighDegree << endl;
     V1.push_back(vertexHighDegree);
 
-    //Rempli V1
     int vertex = vertexHighDegree;
     auto posVertex = find(allVertex.begin(), allVertex.end(), vertex);
     allVertex.erase(posVertex);
 
-    while(V1.size() <= n){
+    //TEST : verifie si high vertex a ete enlever de allvertex
+    cout << "allvertex : " ;
+    for(int i=0; i<allVertex.size(); i++){
+        cout << allVertex[i] << " ";
+    }
+    cout << endl;
 
+    //Rempli V1
+    while(V1.size() < n){
+        cout << "vertex : " << vertex << endl;
         //recherche tout les voisins de vertex encore ds allVertex
         vector<int> tabNeighbor;
         for(const int& neighbor : G.adjacencyList[vertex]){
-            auto isInAllVertex = find(allVertex.begin(), allVertex.end(), neighbor);
-            if(isInAllVertex != allVertex.end()){
+            bool isInAllVertex = valPresent(allVertex, neighbor);
+            if(isInAllVertex == true){
                 tabNeighbor.push_back(neighbor);
             }
         }
 
-        if(!tabNeighbor.empty()){       //regarde si vertex a encore des voisins ds allVertex
-            int v = G.adjacencyList[vertex][0];
+        //verifie si vertex a encore des voisins ds allVertex
+        if(!tabNeighbor.empty()){
+            //TEST
+            cout << "tabNeighbor : ";
+            for(int i=0; i<tabNeighbor.size(); i++){
+                cout << tabNeighbor[i] << " ";
+            }
+            cout << endl;
+
+            int &v = tabNeighbor[0];
+            //TEST
+            cout << "v0: " << v << endl;
+            auto posV = find(tabNeighbor.begin(), tabNeighbor.end(), v);
+            tabNeighbor.erase(posV);
+            cout << "tabNeighbor after erase v0 : ";
+            for(int i=0; i<tabNeighbor.size(); i++){
+                cout << tabNeighbor[i] << " ";
+            }
+            cout << endl;
+
             for(const int& neighbor : G.adjacencyList[vertex]){
-                //recherche la position du voisin ds allVertex
-                auto isInAllVertex = find(allVertex.begin(), allVertex.end(), neighbor);
+                //verifie si le voisin est ds allvertex
+                bool isInAllVertex = valPresent(allVertex, neighbor);
+                //TEST
+                cout << neighbor << " est ds all vertex : " << isInAllVertex << endl;
                 //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
-                if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex != allVertex.end()){
+                cout << "degree v : " << tabDegrees[v] << endl;
+                cout << "degree neighbor : " << tabDegrees[neighbor] << endl;
+                if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == 1){
+                    cout << "test" << endl;
                     v = neighbor;
                 }
             }
-            auto var = find(V1.begin(), V1.end(), v);    //recherche la position de la valeur, si la valeur n'est pas presente var=V1.end;
-            if(var == V1.end()){
+            //TEST
+            cout << "v choisit : " << v << endl;
+            //verifie si la valeur est pas deja présente ds V1
+            bool var = valPresent(V1, v);
+            //TEST
+            cout << "v est deja present ds V1 : " << var << endl;
+            if(var == 0){
+                cout << "ok v pas present ds V1" << endl;
                 V1.push_back(v);        //ajoute le sommet ds V1
-                auto pos = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
-                allVertex.erase(pos);       //supprime le sommet ds allVertex
+                auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
+                allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
+                auto posTabNeighbor = find(tabNeighbor.begin(), tabNeighbor.end(),v);
+                tabNeighbor.erase(posTabNeighbor);
             }
+
         }
-        else{       //regarde les autres sommets ds V1 pour trouver des voisins de + haut degre
+
+        //regarde les autres sommets ds V1 pour trouver des voisins de + haut degre
+        if(tabNeighbor.empty()){
             int v;
             for(const int &elem : V1){
                 v = G.adjacencyList[elem][0];
                 for(const int& neighbor : G.adjacencyList[elem]){
-                    //recherche la position du voisin ds allVertex
-                    auto isInAllVertex = find(allVertex.begin(), allVertex.end(), neighbor);
+                    //verifie que le voisin est ds allvertex
+                    bool isInAllVertex = valPresent(allVertex, neighbor);
                     //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
-                    if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex != allVertex.end()){
+                    if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == true){
                         v = neighbor;
                     }
                 }
             }
-            auto var = find(V1.begin(), V1.end(), v);    //recherche la position de la valeur, si la valeur n'est pas presente var=V1.end;
-            if(var == V1.end()){
+            //verifie si la valeur est pas deja présente ds V1
+            bool var = valPresent(V1, v);
+            if(var == false){
                 V1.push_back(v);        //ajoute le sommet ds V1
-                auto pos = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
-                allVertex.erase(pos);       //supprime le sommet ds allVertex
+                auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
+                allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
             }
         }
     }
 
     //Rempli V2 avec les sommets qui ne sont pas dans V1
     for(int i=0; i<G.V; i++){
-        auto var = find(V1.begin(), V1.end(), i);    //recherche la position de la valeur, si la valeur n'est pas presente var=V1.end;
-        if(var == V1.end()){
+        bool var = valPresent(V1, i);       //verifie si la valeur est deja ds V1
+        if(var == false){
             V2.push_back(i);
         }
     }
 
     vectors.push_back(V1);
+    //TEST
+    cout << "V1 : ";
+    for(int i=0; i<vectors[0].size(); i++){
+        cout << vectors[0][i] << " ";
+    }
+    cout << endl;
     vectors.push_back(V2);
+    //TEST
+    cout << "V2 : ";
+    for(int i=0; i<vectors[1].size(); i++){
+        cout << vectors[1][i] << " ";
+    }
+    cout << endl;
     return vectors;
+}
+
+
+bool valPresent(vector<int> vector, int val){
+    unordered_set<int> ensemble(vector.begin(), vector.end());
+    return ensemble.count(val) > 0;
 }

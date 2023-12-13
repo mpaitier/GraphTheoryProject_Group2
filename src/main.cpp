@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 #include "GraphAdjacencylist.h"
 #include "ConstructiveHeuristic.h"
@@ -13,7 +14,8 @@ int main(int argc, char *argv[]) {
         numVertices = numVertices + 1;
     }
     GraphAdjacencyList graph(numVertices);
-    int numEdgesMax = rand() % ((numVertices*(numVertices-1))/2);
+    int edges = (numVertices*(numVertices-1))/2;
+    int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
     int numEdges = 0;
     for(int i=0; i<numEdgesMax; i++){
         int randomVertex1 = rand() %numVertices;
@@ -49,6 +51,65 @@ int main(int argc, char *argv[]) {
         cout << elem << " ";
     }
     cout << "]" << endl;
+
+    cout << "CONSTRUCTIVE HEURISTIC" << endl;
+    vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
+
+    int edgesCommuns = calculEdgeCommun(graph,subgraphs);
+    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
+
+
+
+/*
+//Test function ConstructiveHeuristic and calculEdgeCommun
+    int numVertices = 6;
+    GraphAdjacencyList G(numVertices);
+    G.addEdge(1,2);
+    G.addEdge(1,3);
+    G.addEdge(1,4);
+    G.addEdge(2,3);
+    G.addEdge(2,4);
+    G.addEdge(2,5);
+    G.addEdge(3,5);
+    G.addEdge(3,0);
+    G.addEdge(4,5);
+    G.addEdge(5,0);
+    G.printGraph();
+
+    vector<int> tabDegrees = G.allDegrees();
+    cout << "Tableau degres : [";
+    for(const int &elem : tabDegrees){
+        cout << elem << " ";
+    }
+    cout << "]" << endl;
+
+    cout << "CONSTRUCTIVE HEURISTIC" << endl;
+    vector<vector<int>> subgraphs = ConstructiveHeuristic(G);
+
+    int edgesCommuns = calculEdgeCommun(G,subgraphs);
+    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
+*/
+
+
+/*
+//Test function calculEdgeCommun
+    vector<vector<int>> subgraphs ;
+    vector<int> V1 = {1,4,5};
+    subgraphs.push_back(V1);
+    vector<int> V2 = {2,3,0};
+    subgraphs.push_back(V2);
+
+    for(const auto& sousgraph : subgraphs){
+        cout << "sous graph : ";
+        for(const int& element : sousgraph){
+            cout << element << " ";
+        }
+        cout << endl;
+    }
+
+    int som = calculEdgeCommun(G,subgraphs);
+    cout << "nbr arretes communes entre les deux sous graphes : " << som <<  " (6)" <<endl;
+*/
 
     return 0;
 }
