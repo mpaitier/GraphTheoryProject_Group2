@@ -48,3 +48,33 @@ int calculEdgeCommun(GraphAdjacencyList G, vector<vector<int>> subgraphs){
     return som;
 }
 
+bool GraphAdjacencyList::isEdge(int v, int w){
+    for(int i=0; i<adjacencyList[v].size(); i++){
+        if(adjacencyList[v][i] == w){
+            return true;
+        }
+    }
+    return false;
+}
+
+int GraphAdjacencyList::InDegree(int v, vector<int> V1){
+    int count = 0;
+    for(int i=0; i<V1.size(); i++){
+        if(isEdge(v, V1[i])){
+            count++;
+        }
+    }
+    return count;
+
+}
+
+int GraphAdjacencyList::OutDegree(int v, vector<int> V2){
+    int count = 0;
+    for(int i=0; i<V2.size(); i++){
+        if(isEdge(v, V2[i])){
+            count++;
+        }
+    }
+    return count;
+
+}
