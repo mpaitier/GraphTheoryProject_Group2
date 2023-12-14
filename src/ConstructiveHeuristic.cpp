@@ -105,7 +105,7 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
                         v = V1[i];
                     }
                 }
-                /*for(const int& neighbor : G.adjacencyList[v]){
+                for(const int& neighbor : G.adjacencyList[v]){
                     vertex = G.adjacencyList[v][0];
                     //verifie que le voisin est ds allvertex
                     bool isInAllVertex = valPresent(allVertex, neighbor);
@@ -113,21 +113,21 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
                     if(tabDegrees[vertex] < tabDegrees[neighbor] && isInAllVertex == true){
                         vertex = neighbor;
                     }
-                }*/
-                for(const int& neighbor : G.adjacencyList[elem]){
+                }
+                /*for(const int& neighbor : G.adjacencyList[elem]){
                     //verifie que le voisin est ds allvertex
                     bool isInAllVertex = valPresent(allVertex, neighbor);
                     //recupère sommet + haut degre ds les voisins et verifie si present ds allVertex
                     if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == true){
                         v = neighbor;
                     }
-                }
+                }*/
             }
             //verifie si la valeur est pas deja présente ds V1
-            bool var = valPresent(V1, v);
+            bool var = valPresent(V1, vertex);
             if(var == false){
-                V1.push_back(v);        //ajoute le sommet ds V1
-                auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
+                V1.push_back(vertex);        //ajoute le sommet ds V1
+                auto posAllVertex = find(allVertex.begin(), allVertex.end(), vertex);     //recherche la position de v ds allVertex
                 allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
             }
         }
