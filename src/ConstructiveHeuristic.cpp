@@ -83,7 +83,6 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
                 cout << "degree v : " << tabDegrees[v] << endl;
                 cout << "degree neighbor : " << tabDegrees[neighbor] << endl;
                 if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == 1){
-                    cout << "test" << endl;
                     v = neighbor;
                 }
             }
@@ -108,11 +107,17 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
         if(tabNeighbor.empty()){
             int v;
             for(const int &elem : V1){
-                v = G.adjacencyList[elem][0];
+                int v = V1[1];
+                for(int i=0; i<V1.size(); i++){
+                    if(tabDegrees[v] < tabDegrees[V1[i]] && V1[i]! = vertexHighDegree){
+                        v = V1[i];
+                    }
+                }
+                //v = G.adjacencyList[elem][0];
                 for(const int& neighbor : G.adjacencyList[elem]){
                     //verifie que le voisin est ds allvertex
                     bool isInAllVertex = valPresent(allVertex, neighbor);
-                    //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
+                    //recupère sommet + haut degre ds les voisins et verifie si present ds allVertex
                     if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == true){
                         v = neighbor;
                     }
