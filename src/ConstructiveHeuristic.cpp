@@ -64,16 +64,6 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
             cout << endl;
 
             int &v = tabNeighbor[0];
-            //TEST
-            cout << "v0: " << v << endl;
-            auto posV = find(tabNeighbor.begin(), tabNeighbor.end(), v);
-            tabNeighbor.erase(posV);
-            cout << "tabNeighbor after erase v0 : ";
-            for(int i=0; i<tabNeighbor.size(); i++){
-                cout << tabNeighbor[i] << " ";
-            }
-            cout << endl;
-
             for(const int& neighbor : G.adjacencyList[vertex]){
                 //verifie si le voisin est ds allvertex
                 bool isInAllVertex = valPresent(allVertex, neighbor);
@@ -104,16 +94,26 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
         }
 
         //regarde les autres sommets ds V1 pour trouver des voisins de + haut degre
-        if(tabNeighbor.empty()){
+        //if(tabNeighbor.empty()){
+        else{
+            cout << "rentre"<< endl;
             int v;
             for(const int &elem : V1){
                 int v = V1[1];
                 for(int i=0; i<V1.size(); i++){
-                    if(tabDegrees[v] < tabDegrees[V1[i]] && V1[i]! = vertexHighDegree){
+                    if(tabDegrees[v] < tabDegrees[V1[i]] && V1[i] != vertexHighDegree){
                         v = V1[i];
                     }
                 }
-                //v = G.adjacencyList[elem][0];
+                /*for(const int& neighbor : G.adjacencyList[v]){
+                    vertex = G.adjacencyList[v][0];
+                    //verifie que le voisin est ds allvertex
+                    bool isInAllVertex = valPresent(allVertex, neighbor);
+                    //recupère sommet + haut degre ds les voisins et verifie si present ds allVertex
+                    if(tabDegrees[vertex] < tabDegrees[neighbor] && isInAllVertex == true){
+                        vertex = neighbor;
+                    }
+                }*/
                 for(const int& neighbor : G.adjacencyList[elem]){
                     //verifie que le voisin est ds allvertex
                     bool isInAllVertex = valPresent(allVertex, neighbor);
