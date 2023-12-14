@@ -57,24 +57,17 @@ bool GraphAdjacencyList::isEdge(int v, int w){
     return false;
 }
 
-int GraphAdjacencyList::InDegree(int v, vector<int> V1){
+int GraphAdjacencyList::InOutDegree(int v, vector<int> V1){
+    /*cout << "degree ";*/
     int count = 0;
     for(int i=0; i<V1.size(); i++){
         if(isEdge(v, V1[i])){
+            /*cout << V1[i] << " - ";*/
             count++;
         }
     }
+    /*cout << endl;*/
     return count;
 
 }
 
-int GraphAdjacencyList::OutDegree(int v, vector<int> V2){
-    int count = 0;
-    for(int i=0; i<V2.size(); i++){
-        if(isEdge(v, V2[i])){
-            count++;
-        }
-    }
-    return count;
-
-}

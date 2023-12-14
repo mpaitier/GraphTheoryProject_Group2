@@ -4,6 +4,7 @@
 
 #include "GraphAdjacencylist.h"
 #include "ConstructiveHeuristic.h"
+#include "LocalSearchHeuristic.h"
 
 int main(int argc, char *argv[]) {
 
@@ -40,9 +41,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /*
+    GraphAdjacencyList graph(6);
+    graph.addEdge(0,3);
+    graph.addEdge(0,2);
+    graph.addEdge(0,1);
+    graph.addEdge(0,4);
+    graph.addEdge(2,5);
+    graph.addEdge(4,2);*/
+
     cout << "Nombre de sommet : " << graph.V << endl;
+    /*
     cout << "Nombre d'arretes maximum : " << numEdgesMax << endl;
-    cout << "Nombre d'arretes : " << numEdges << endl;
+    cout << "Nombre d'arretes : " << numEdges << endl; */
     graph.printGraph();
 
     vector<int> tabDegrees = graph.allDegrees();
@@ -58,6 +69,11 @@ int main(int argc, char *argv[]) {
     int edgesCommuns = calculEdgeCommun(graph,subgraphs);
     cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
 
+    cout << "LOCAL SEARCH" << endl;
+    vector<vector<int>> subgraphs2 = LocalSearch(graph);
+
+    int edgesCommuns2 = calculEdgeCommun(graph,subgraphs2);
+    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns2 << endl;
 
 
 /*
