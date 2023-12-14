@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "GraphAdjacencylist.h"
+#include "ExactAlgorithm.h"
 #include "ConstructiveHeuristic.h"
 #include "LocalSearchHeuristic.h"
 
@@ -106,7 +107,23 @@ int main(int argc, char *argv[]) {
     cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
 */
 
-
+/*
+    // ALGORITHME EXACT test avec le graphe G
+    cout << "\nALGO EXACT" << endl;
+    vector<int> vertices = {};
+    for (int i = 0; i < G.V; ++i) {
+        vertices.push_back(i);
+    }
+    int min_cut = numeric_limits<int>::max();
+    vector<int> best = {};
+    powerSet(G, vertices, min_cut, best);
+    cout << "==> Min cut : " << min_cut << endl;
+    cout << "==> Best partition : ";
+    affiche_vector(best);
+    cout << " - ";
+    affiche_vector(deduire_subgraph2(vertices, best));
+*/
+    
 /*
 //Test function calculEdgeCommun
     vector<vector<int>> subgraphs ;
@@ -126,6 +143,7 @@ int main(int argc, char *argv[]) {
     int som = calculEdgeCommun(G,subgraphs);
     cout << "nbr arretes communes entre les deux sous graphes : " << som <<  " (6)" <<endl;
 */
+
 
     return 0;
 }
