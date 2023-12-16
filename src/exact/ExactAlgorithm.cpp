@@ -1,5 +1,5 @@
 #include "ExactAlgorithm.h"
-#include "GraphAdjacencyList.h"
+#include "../model/GraphAdjacencyList.h"
 
 void affiche_vector(vector <int> v){
     for (int i = 0; i < v.size(); ++i) {

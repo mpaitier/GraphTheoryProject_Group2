@@ -2,10 +2,10 @@
 #include <iostream>
 #include <vector>
 
-#include "GraphAdjacencylist.h"
-#include "ExactAlgorithm.h"
-#include "ConstructiveHeuristic.h"
-#include "LocalSearchHeuristic.h"
+#include "model/GraphAdjacencyList.h"
+#include "exact/ExactAlgorithm.h"
+#include "constructive/ConstructiveHeuristic.h"
+#include "local_search/LocalSearchHeuristic.h"
 
 int main(int argc, char *argv[]) {
 

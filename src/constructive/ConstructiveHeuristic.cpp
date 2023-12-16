@@ -1,5 +1,5 @@
 #include "ConstructiveHeuristic.h"
-#include "GraphAdjacencyList.h"
+#include "../model/GraphAdjacencyList.h"
 
 vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
     vector<int> tabDegrees = G.allDegrees();

@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include "GraphAdjacencyList.h"
+#include "../model/GraphAdjacencyList.h"
 
 using namespace std;
 

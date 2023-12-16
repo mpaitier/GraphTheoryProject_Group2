@@ -4,7 +4,7 @@
 
 
 #include <bits/stdc++.h>
-#include "GraphAdjacencyList.h"
+#include "../model/GraphAdjacencyList.h"
 using namespace std;
 
 void affiche_vector(vector <int> v);
