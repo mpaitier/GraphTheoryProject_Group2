@@ -1,30 +1,67 @@
 #include "GraphAdjacencyList.h"
 
+/* //=========\\ Class GraphAdjacencyList //=========\\ */
 
+/* <------# Constructor #------> */
 GraphAdjacencyList::GraphAdjacencyList(int vertices) : V(vertices) {
     adjacencyList.resize(vertices);
 }
+/* <------# Methods #------> */
 
 void GraphAdjacencyList::addEdge(int v, int w) {
+/*
+ * INPUT : two integers v and w representing two vertices
+ * OUTPUT : none
+ * FUNCTION : add an edge between the vertices v and w
+ */
     adjacencyList[v].push_back(w);
     adjacencyList[w].push_back(v);
 }
 
+bool GraphAdjacencyList::isEdge(int v, int w){
+/*
+ * INPUT : two integers v and w representing two vertices
+ * OUTPUT : boolean
+ * FUNCTION : check if there is an edge between the vertices v and w
+ */
+    for(int i=0; i<adjacencyList[v].size(); i++){
+        if(adjacencyList[v][i] == w){
+            return true;
+        }
+    }
+    return false;
+}
+
 void GraphAdjacencyList::printGraph() {
+/*
+ * INPUT : none
+ * OUTPUT : none
+ * FUNCTION : print the graph
+ */
     for (int i = 0; i < V; ++i) {
-        cout << "Sommet " << i << " : ";
+        cout << "Vertex " << i << " :";
         for (const int &neighbor : adjacencyList[i]) {
-            cout << neighbor << " ";
+            cout << " " << neighbor ;
         }
         cout << endl;
     }
 }
 
 int GraphAdjacencyList::degree(int v) {
+/*
+ * INPUT : a vertex v
+ * OUTPUT : an integer
+ * FUNCTION : compute the degree of the vertex v
+ */
     return adjacencyList[v].size();
 }
 
 vector<int> GraphAdjacencyList::allDegrees(){
+/*
+ * INPUT : none
+ * OUTPUT : a vector of integers
+ * FUNCTION : compute the degree of all the vertices
+ */
     vector<int> tab;
     for(int i=0; i<V; i++){
         tab.push_back(degree(i));
@@ -32,7 +69,33 @@ vector<int> GraphAdjacencyList::allDegrees(){
     return tab;
 }
 
+int GraphAdjacencyList::InOutDegree(int v, vector<int> V1){
+/*
+ * INPUT : an integer v representing a vertex and a vector of vertices V1 representing a subgraph
+ * OUTPUT : an integer
+ * FUNCTION : compute the in or out degrees of the vertex v depending on if v is in V1 or not
+ */
+    /*cout << "degree ";*/
+    int count = 0;
+    for(int i=0; i<V1.size(); i++){
+        if(isEdge(v, V1[i])){
+            /*cout << V1[i] << " - ";*/
+            count++;
+        }
+    }
+    /*cout << endl;*/
+    return count;
+
+}
+
+/* <------# Functions #------> */
+
 int calculEdgeCommun(GraphAdjacencyList G, vector<vector<int>> subgraphs){
+/*
+ * INPUT : a graph G and a vector of two subgraphs
+ * OUTPUT : an integer
+ * FUNCTION : compute the number of common edges between the two subgraphs
+ */
     vector<int> V1 = subgraphs[0];
     vector<int> V2 = subgraphs[1];
     int som = 0;
@@ -48,26 +111,43 @@ int calculEdgeCommun(GraphAdjacencyList G, vector<vector<int>> subgraphs){
     return som;
 }
 
-bool GraphAdjacencyList::isEdge(int v, int w){
-    for(int i=0; i<adjacencyList[v].size(); i++){
-        if(adjacencyList[v][i] == w){
-            return true;
+void WriteToFile(const std::string& directory, const std::string& filename, const std::vector<int>& V1, const std::vector<int>& V2, int commonEdges) {
+/*
+ * INPUT : a directory, a filename, two vectors V1 and V2, representing two subgraphs and the number of common edges between the two subgraphs
+ * OUTPUT : none
+ * FUNCTION : create a file in the asked directory with the asked filename
+ *            write in it the size of the graph and the number of common edges between the two subgraphs V1 and V2 and the two subgraphs
+ */
+
+    // Create a file in the asked directory with the asked filename
+    ofstream outFile("../instances/" + directory + "/"+ filename);
+
+    if (outFile.is_open()) {
+        // Write in the first line: the size of the graph and the number of common edges between the two subgraphs V1 and V2
+        outFile << V1.size() + V2.size() << " " << commonEdges << "\n";
+
+        // Write in the second line: all vertices in V1
+        for (int X1 = 0; X1 < V1.size(); X1++) {
+            outFile << V1[X1];
+            // Allows to not write a space after the last vertex
+            if (X1 < V1.size() - 1)
+                outFile << " ";
         }
-    }
-    return false;
-}
+        outFile << "\n";
 
-int GraphAdjacencyList::InOutDegree(int v, vector<int> V1){
-    /*cout << "degree ";*/
-    int count = 0;
-    for(int i=0; i<V1.size(); i++){
-        if(isEdge(v, V1[i])){
-            /*cout << V1[i] << " - ";*/
-            count++;
+        // Write in the third line: all vertices in V2
+        for (int X2 = 0; X2 < V2.size(); X2++) {
+            outFile << V2[X2];
+            // Allows to not write a space after the last vertex
+            if (X2 < V2.size() - 1)
+                outFile << " ";
         }
+        outFile << "\n";
+
+        outFile.close();
     }
-    /*cout << endl;*/
-    return count;
-
+    else {
+        // If the file cannot be opened, we display an error message
+        cerr << "Unable to open file: ../instances/" << directory << "/" << filename << endl;
+    }
 }
-
