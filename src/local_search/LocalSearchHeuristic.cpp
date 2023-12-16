@@ -1,12 +1,19 @@
 #include "LocalSearchHeuristic.h"
 
 vector<vector<int>> LocalSearch(GraphAdjacencyList &graph) {
+/*
+ * INPUT : a graph
+ * OUTPUT : two subgraphs V1 and V2
+ * FUNCTION : apply the local search heuristic to the graph : for each vertex V1[X1] of V1, we check if there is a vertex V2[X2] of V2 such that :
+ * if the total in degrees of V1[X1] and V2[X2] is smaller than the total out degrees of V1[X1] and V2[X2], we swap the two vertices.
+ */
 
     // create two subgraphs V1 and V2, result of the constructive heuristic
     vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
     vector<int> V1 = subgraphs[0];
     vector<int> V2 = subgraphs[1];
 
+    // initialize the in and out degrees of the vertices
     int InDegreeV1 = 0;
     int InDegreeV2 = 0;
     int InDegrees = 0;
@@ -15,80 +22,46 @@ vector<vector<int>> LocalSearch(GraphAdjacencyList &graph) {
     int OutDegreeV2 = 0;
     int OutDegrees = 0;
 
+    // initialize the number of common edges
     int commun = 0;
-    bool change = true;
 
-    //while(change){
-        change = false;
-        for(int X1 = 0; X1 < V1.size(); X1++){
+    for(int X1 = 0; X1 < V1.size(); X1++){
 
-            for (int X2 = 0; X2 < V2.size(); X2++) {
+        // compute the in and out degrees of the vertex V1[X1]
+        InDegreeV1 = graph.InOutDegree(V1[X1],V1);
+        OutDegreeV1 = graph.InOutDegree(V1[X1],V2);
 
-                if(graph.isEdge(V1[X1], V2[X2])){
-                    commun = 1;
-                }
-                else{
-                    commun = 0;
-                }
-                /*
-                cout << " ====================== " << endl;
-                cout << "edge : " << V1[X1] << endl;
-                 */
-                InDegreeV1 = graph.InOutDegree(V1[X1],V1);
-                OutDegreeV1 = graph.InOutDegree(V1[X1],V2);
-                /*
-                cout << "edge : " << V2[X2] << endl;
-                */
-                OutDegreeV2 = graph.InOutDegree(V2[X2],V1);
-                InDegreeV2 = graph.InOutDegree(V2[X2],V2);
+        for (int X2 = 0; X2 < V2.size(); X2++) {
 
-                InDegrees = InDegreeV1 + InDegreeV2;
-                OutDegrees = OutDegreeV1 + OutDegreeV2 - commun;
-
-                if ( InDegrees < OutDegrees) {
-                    /* cout << endl << endl;
-                    //TEST
-                    cout << "change : " << V1[X1] << " and " << V2[X2]<< endl;
-                    // afficher V1 et V2
-                    cout << "V1 : ";
-                    for(int i=0; i<V1.size(); i++){
-                        cout << V1[i] << " ";
-                    }
-                    cout << endl;
-                    cout << "V2 : ";
-                    for(int i=0; i<V2.size(); i++){
-                        cout << V2[i] << " ";
-                    }
-                    cout << endl;
-
-                    // afficher les  valeurs de la comparaison
-                    cout << "V1: " << InDegreeV1 << " -- " << OutDegreeV1 << endl;
-                    cout << "V2: " << InDegreeV2 << " -- " << OutDegreeV2 << endl;
-                    cout << InDegrees << " -- " << OutDegrees << endl;
-                    */
-                    int temp = V1[X1];
-                    V1[X1] = V2[X2];
-                    V2[X2] = temp;
-                    /*
-                    // afficher V1 et V2
-                    cout << "V1 : ";
-                    for(int i=0; i<V1.size(); i++){
-                        cout << V1[i] << " ";
-                    }
-                    cout << endl;
-                    cout << "V2 : ";
-                    for(int i=0; i<V2.size(); i++){
-                        cout << V2[i] << " ";
-                    }
-                    cout << endl << endl;
-                    */
-                    change = true;
-                }
-
+            // check if there is an edge between the two vertices
+            if(graph.isEdge(V1[X1], V2[X2])){
+                commun = 1;
             }
-        //}
+            else{
+                commun = 0;
+            }
+
+            // compute the in and out degrees of the vertex V2[X2]
+            OutDegreeV2 = graph.InOutDegree(V2[X2],V1);
+            InDegreeV2 = graph.InOutDegree(V2[X2],V2);
+
+            // compute the total in degrees and the total out degrees of the two vertices V1[X1] and V2[X2]
+            InDegrees = InDegreeV1 + InDegreeV2;
+            OutDegrees = OutDegreeV1 + OutDegreeV2 - commun;
+
+            // if the total in degrees of V1[X1] and V2[X2] is smaller than the total out degrees, then ...
+            if ( InDegrees < OutDegrees) {
+
+                // swap the two vertices
+                int temp = V1[X1];
+                V1[X1] = V2[X2];
+                V2[X2] = temp;
+            }
+
+        }
     }
 
+    // return the two subgraphs V1 and V2
     vector<vector<int>> result;
     result.push_back(V1);
     result.push_back(V2);
