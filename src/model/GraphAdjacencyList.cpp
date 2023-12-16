@@ -120,7 +120,7 @@ void WriteToFile(const std::string& directory, const std::string& filename, cons
  */
 
     // Create a file in the asked directory with the asked filename
-    ofstream outFile("../instances/" + directory + "/"+ filename);
+    ofstream outFile(directory + "/"+ filename);
 
     if (outFile.is_open()) {
         // Write in the first line: the size of the graph and the number of common edges between the two subgraphs V1 and V2
@@ -148,6 +148,33 @@ void WriteToFile(const std::string& directory, const std::string& filename, cons
     }
     else {
         // If the file cannot be opened, we display an error message
-        cerr << "Unable to open file: ../instances/" << directory << "/" << filename << endl;
+        cerr << "Unable to open file: " << directory << filename << endl;
     }
+}
+
+int CountOutFilesInDirectory(const std::string& directoryPath) {
+/*
+ * INPUT : a directory path
+ * OUTPUT : an integer
+ * FUNCTION : count the number of output files in the directory
+ */
+    // Initialize the counter
+    int count = 0;
+
+    // Try to open the directory
+    try {
+        // For each entry in the directory
+        for (const auto& entry : std::filesystem::directory_iterator(directoryPath)) {
+            // If the entry is a regular file and has the extension ".out", we increment the counter
+            if (entry.is_regular_file() && entry.path().extension() == ".out") {
+                count++;
+            }
+        }
+    }
+    // If the directory cannot be opened, we display an error message
+    catch (const std::exception& e) {
+        std::cerr << "Error reading directoryy : " << e.what() << std::endl;
+    }
+
+    return count;
 }

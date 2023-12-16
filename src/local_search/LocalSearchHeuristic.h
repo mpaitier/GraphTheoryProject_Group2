@@ -5,6 +5,6 @@
 #include "../constructive/ConstructiveHeuristic.h"
 
 // #define TEST
-vector<vector<int>> LocalSearch(GraphAdjacencyList &graph, int testNumber);
+vector<vector<int>> LocalSearch(GraphAdjacencyList &graph);
 
 #endif //GRAPHTHEORYPROJECT_GROUP2_LOCALSEARCHHEURISTIC_H

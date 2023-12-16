@@ -1,6 +1,6 @@
 #include "LocalSearchHeuristic.h"
 
-vector<vector<int>> LocalSearch(GraphAdjacencyList &graph, int testNumber) {
+vector<vector<int>> LocalSearch(GraphAdjacencyList &graph) {
 /*
  * INPUT : a graph
  * OUTPUT : two subgraphs V1 and V2
@@ -60,21 +60,10 @@ vector<vector<int>> LocalSearch(GraphAdjacencyList &graph, int testNumber) {
 
         }
     }
-
-    // compute the number of common edges between the two subgraphs
-    int edgeInCommon = calculEdgeCommun(graph, subgraphs);
-
     // return the two subgraphs V1 and V2
     vector<vector<int>> result;
     result.push_back(V1);
     result.push_back(V2);
-
-    // Directory to save the file
-    std::string directory = "../../instances/local_search/";
-
-    // Write the result to the output file
-    std::string filename = "test" + std::to_string(testNumber) + "_local_search.out";
-    WriteToFile(directory, filename, V1, V2, edgeInCommon);
 
     return result;
 }

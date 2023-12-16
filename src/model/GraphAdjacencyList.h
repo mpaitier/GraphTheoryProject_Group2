@@ -2,6 +2,7 @@
 #define TD3_GRAPHADJACENCYLIST_H
 
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -30,8 +31,9 @@ public:
 };
 
 /* <------# Functions #------> */
-int calculEdgeCommun(GraphAdjacencyList G, vector<vector<int>> subgraphs);
+int calculEdgeCommun(GraphAdjacencyList G, vector<vector<int>> subgraphs); // compute the number of common edges between the two subgraphs
 
-void WriteToFile(const std::string& directory, const string& filename, const vector<int>& v1, const vector<int>& v2, int commonEdges);
+void WriteToFile(const std::string& directory, const string& filename, const vector<int>& v1, const vector<int>& v2, int commonEdges); // write the result to the output file
+int CountOutFilesInDirectory(const std::string& directoryPath); // count the number of output files in the directory
 
 #endif //TD3_GRAPHADJACENCYLIST_H

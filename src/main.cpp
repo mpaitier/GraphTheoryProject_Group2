@@ -63,19 +63,51 @@ int main(int argc, char *argv[]) {
         cout << elem << " ";
     }
     cout << "]" << endl;
-
+    /*
     cout << "CONSTRUCTIVE HEURISTIC" << endl;
     vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
 
     int edgesCommuns = calculEdgeCommun(graph,subgraphs);
     cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
+    */
 
-    cout << "LOCAL SEARCH" << endl;
-    vector<vector<int>> subgraphs2 = LocalSearch(graph);
+/* ---------------------------------------------------------------------------------- */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Local Search \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* ---------------------------------------------------------------------------------- */
+    cout << "#---------------- LOCAL SEARCH ----------------#" << endl;
+/* Execution of the local search algortihm */
+    // Apply the local search heuristic to the graph
+    vector<vector<int>> localSearch_subgraphs = LocalSearch(graph);
 
-    int edgesCommuns2 = calculEdgeCommun(graph,subgraphs2);
-    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns2 << endl;
+    // compute the number of common edges between the two subgraphs
+    int commonEdges_LocalSearch = calculEdgeCommun(graph,localSearch_subgraphs);
 
+    // print the result expected in the output file
+    // FIRST LINE : number of common edges between the two subgraphs
+    cout << localSearch_subgraphs[0].size()+localSearch_subgraphs[1].size() << commonEdges_LocalSearch << endl;
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : localSearch_subgraphs[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : localSearch_subgraphs[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
+/* Writting the result in the output file */
+    // Count the number of output files in the directory
+    int local_search_count = CountOutFilesInDirectory("../instances/local_search");
+
+    // Directory to save the file
+    std::string directory = "../instances/local_search/";
+
+    // Write the result to the output file
+    std::string filename = "test" + std::to_string(local_search_count) + "_local_search.out";
+    WriteToFile(directory, filename, localSearch_subgraphs[0], localSearch_subgraphs[1], commonEdges_LocalSearch);
 
 /*
 //Test function ConstructiveHeuristic and calculEdgeCommun
