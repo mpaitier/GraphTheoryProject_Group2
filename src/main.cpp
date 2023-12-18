@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
     // print the result expected in the output file
     // FIRST LINE : number of common edges between the two subgraphs
-    cout << localSearch_subgraphs[0].size()+localSearch_subgraphs[1].size() << commonEdges_LocalSearch << endl;
+    cout << localSearch_subgraphs[0].size()+localSearch_subgraphs[1].size() << " " << commonEdges_LocalSearch << endl;
     // SECOND LINE : vertices of the first subgraph
     cout << "V1 : ";
     for(const int& element : localSearch_subgraphs[0]){
