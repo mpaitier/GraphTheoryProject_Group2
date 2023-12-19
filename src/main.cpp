@@ -9,6 +9,51 @@
 
 int main(int argc, char *argv[]) {
 
+/*
+    // ----------------------------------------------------------------
+    // Récupérer les données du fichier input
+    // ----------------------------------------------------------------
+    // int nbVertices : nombre de sommets
+    // int nbEdges : nombre d'arêtes
+    // vector<int> edges : vecteur d'entiers correspondant aux arêtes
+    // ----------------------------------------------------------------
+    
+    ifstream input_file("../filename.in");
+
+    if(input_file)
+    {
+        string ligne;
+        input_file.seekg(0, ios::beg);
+
+        int nbVertices;
+        int nbEdges;
+
+        input_file >> nbVertices;
+        input_file >> nbEdges;
+
+        vector<int> edges;
+
+        for (int i = 0; i < nbEdges; ++i) {
+            int u, v, weight;
+            input_file >> u >> v >> weight;
+
+            edges.push_back(u);
+            edges.push_back(v);
+            edges.push_back(weight);
+        }
+
+
+    }
+    else
+    {
+        cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
+    }
+
+
+    input_file.close();
+*/
+
+    
     //Crée un graph de manière aléatoire avec maximum 20 sommets
     srand(time(NULL));
     /*
