@@ -23,7 +23,7 @@
 /* --------- PRINT TEST --------- */
 //#define TEST_EXACT_CSV
 //#define TEST_CONSTRUCTIVE_CSV
-#define TEST_LOCAL_CSV
+//#define TEST_LOCAL_CSV
 //#define TEST_TABU_CSV
 
 //#define TEST_EXACT_OUTPUT
