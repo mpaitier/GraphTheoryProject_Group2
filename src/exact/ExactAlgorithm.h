@@ -8,7 +8,7 @@
 using namespace std;
 
 void affiche_vector(vector <int> v);
-void powerSet(GraphAdjacencyList G, vector<int> vertices, int& min_cut, vector<int>& best, int index = -1, vector<int> curr = {});
+void ExactAlgorithm(GraphAdjacencyList G, vector<int> vertices, int& min_cut, vector<int>& best, int index = -1, vector<int> curr = {});
 vector<int> deduire_subgraph2(vector<int> vertices, vector<int> subgraph1);
 
 
