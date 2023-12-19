@@ -16,7 +16,6 @@ void GraphAdjacencyList::resetAndRebuild(int vertices, int probEdges) {
  * FUNCTION : reset the graph and rebuild it with a new number of vertices
  */
     V = vertices;
-    adjacencyList.clear();
     adjacencyList.resize(vertices);
 
 // Add edges with a probability of probEdges
