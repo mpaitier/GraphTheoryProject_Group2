@@ -34,15 +34,12 @@ void ExactAlgorithm(GraphAdjacencyList G, vector<int> vertices, int& min_cut, ve
 
     // First print current subset
     if (curr.size() == n/2) {
-        affiche_vector(curr);
-        cout << "\n";
 
         vector<vector<int>> subgraphs;
         subgraphs.push_back(curr);
         subgraphs.push_back(deduire_subgraph2(vertices, curr));
 
         int cut = calculEdgeCommun(G,subgraphs);
-        cout << "Number of edges : " << cut << endl;
 
         if (cut < min_cut){
             min_cut = cut;
