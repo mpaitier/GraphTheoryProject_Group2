@@ -24,7 +24,7 @@ vector<int> deduire_subgraph2(vector<int> vertices, vector<int> subgraph1){
     return subgraph2;
 }
 
-void powerSet(GraphAdjacencyList G, vector<int> vertices, int& min_cut, vector<int>& best, int index, vector<int> curr)
+void ExactAlgorithm(GraphAdjacencyList G, vector<int> vertices, int& min_cut, vector<int>& best, int index, vector<int> curr)
 {
     int n = vertices.size();
 
@@ -56,7 +56,7 @@ void powerSet(GraphAdjacencyList G, vector<int> vertices, int& min_cut, vector<i
     for (int i = index + 1; i < n; i++) {
 
         curr.push_back(vertices[i]);
-        powerSet(G, vertices, min_cut, best, i, curr);
+        ExactAlgorithm(G, vertices, min_cut, best, i, curr);
 
         // Once all subsets beginning with
         // initial "curr" are printed, remove
