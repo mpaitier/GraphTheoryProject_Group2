@@ -118,20 +118,19 @@ int main(int argc, char *argv[]) {
     vector<int> best = {};
     ExactAlgorithm(graph, vertices, min_cut, best);
 
-    // Affichage Ligne 1
+    // FIRST LINE : the number vertices of the graph followed by the number of edges of the solution
     cout << vertices.size() << " " << min_cut << endl;
-    // Affichage Ligne 2
+    // SECOND LINE : vertices of the first subgraph
     vector<int> subgraph2 = deduire_subgraph2(vertices, best);
     cout << "V1 : ";
     affiche_vector(best);
     cout << endl;
-    //Affichage Ligne 3
+    //THIRD LINE : vertices of the second subgraph
     cout << "V2 : ";
     affiche_vector(subgraph2);
     cout << endl;
 
-    
-    /* Writting the result in the output file */
+    /* Writing the result in the output file */
     // Count the number of output files in the directory
     int exact_count = CountOutFilesInDirectory("../instances/exact");
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[]) {
 
 
 /* ---------------------------------------------------------------------------------- */
-/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Constructiv Heuristic \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Constructive Heuristic \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
 /* ---------------------------------------------------------------------------------- */
     cout << "#---------------- CONSTRUCTIVE HEURISTIC ----------------#" << endl;
 /* Execution of the constructive heuristic algorithm */
@@ -172,7 +171,7 @@ int main(int argc, char *argv[]) {
     }
     cout << endl;
 
-/* Writting the result in the output file */
+/* Writing the result in the output file */
     // Count the number of output files in the directory
     int constructive_heuristic_count = CountOutFilesInDirectory("../instances/constructive");
 
