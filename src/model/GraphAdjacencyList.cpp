@@ -6,7 +6,32 @@
 GraphAdjacencyList::GraphAdjacencyList(int vertices) : V(vertices) {
     adjacencyList.resize(vertices);
 }
+
 /* <------# Methods #------> */
+
+void GraphAdjacencyList::resetAndRebuild(int vertices, int probEdges) {
+/*
+ * INPUT : an integer vertices representing the number of vertices and an integer probEdges representing the probability of edges
+ * OUTPUT : none
+ * FUNCTION : reset the graph and rebuild it with a new number of vertices
+ */
+    V = vertices;
+    adjacencyList.clear();
+    adjacencyList.resize(vertices);
+
+// Add edges with a probability of probEdges
+    for (int i = 0; i < vertices; ++i) {
+        for (int j = i + 1; j < vertices; ++j) {
+
+            if (rand() % 100 < probEdges) {
+                if (i != j && !isEdge(i, j)) {
+                    addEdge(i, j);
+                }
+            }
+        }
+    }
+}
+
 
 void GraphAdjacencyList::addEdge(int v, int w) {
 /*

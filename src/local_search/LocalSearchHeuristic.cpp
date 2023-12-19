@@ -1,18 +1,15 @@
 #include "LocalSearchHeuristic.h"
 
-vector<vector<int>> LocalSearch(GraphAdjacencyList &graph) {
+vector<vector<int>> LocalSearch(GraphAdjacencyList &graph, vector<vector<int>> subgraphs) {
 /*
  * INPUT : a graph
  * OUTPUT : two subgraphs V1 and V2
  * FUNCTION : apply the local search heuristic to the graph : for each vertex V1[X1] of V1, we check if there is a vertex V2[X2] of V2 such that :
  * if the total in degrees of V1[X1] and V2[X2] is smaller than the total out degrees of V1[X1] and V2[X2], we swap the two vertices.
  */
-
     // create two subgraphs V1 and V2, result of the constructive heuristic
-    vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
     vector<int> V1 = subgraphs[0];
     vector<int> V2 = subgraphs[1];
-
     // initialize the parameters for the in and out degrees
     int InDegreeX1 = 0;
     int InDegreeX2 = 0;

@@ -20,6 +20,8 @@ public:
     vector<vector<int>> adjacencyList; //adjacency list
 
     /* <------# Methods #------> */
+
+    void resetAndRebuild(int vertices, int probEdges); // reset the graph and rebuild it with a new number of vertices
     void addEdge(int v, int w); // add an edge between the vertices v and w
     bool isEdge(int v, int w); // check if there is an edge between the vertices v and w
 

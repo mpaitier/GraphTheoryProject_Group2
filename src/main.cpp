@@ -11,11 +11,13 @@ int main(int argc, char *argv[]) {
 
     //Crée un graph de manière aléatoire avec maximum 20 sommets
     srand(time(NULL));
+    /*
     int numVertices = rand()%20+1;
     if(numVertices%2 !=0){      //verifier nombre de sommets paire
         numVertices = numVertices + 1;
     }
     GraphAdjacencyList graph(numVertices);
+
     int edges = (numVertices*(numVertices-1))/2;
     int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
     int numEdges = 0;
@@ -41,15 +43,17 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+     */
 
-    /*
+
     GraphAdjacencyList graph(6);
     graph.addEdge(0,3);
     graph.addEdge(0,2);
     graph.addEdge(0,1);
     graph.addEdge(0,4);
     graph.addEdge(2,5);
-    graph.addEdge(4,2);*/
+    graph.addEdge(4,2);
+
 
     cout << "Nombre de sommet : " << graph.V << endl;
     /*
@@ -63,6 +67,20 @@ int main(int argc, char *argv[]) {
         cout << elem << " ";
     }
     cout << "]" << endl;
+/* <-------------# Test resetAndRebuild #------------->*/
+//    graph.resetAndRebuild(10,25);
+//
+//    cout << "Nombre de sommet : " << graph.V << endl;
+//
+//    graph.printGraph();
+//
+//    tabDegrees = graph.allDegrees();
+//    cout << "Tableau degres : [";
+//    for(const int &elem : tabDegrees){
+//        cout << elem << " ";
+//    }
+//    cout << "]" << endl;
+
     /*
     cout << "CONSTRUCTIVE HEURISTIC" << endl;
     vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
@@ -77,7 +95,8 @@ int main(int argc, char *argv[]) {
     cout << "#---------------- LOCAL SEARCH ----------------#" << endl;
 /* Execution of the local search algortihm */
     // Apply the local search heuristic to the graph
-    vector<vector<int>> localSearch_subgraphs = LocalSearch(graph);
+    vector<vector<int>> SG = ConstructiveHeuristic(graph);
+    vector<vector<int>> localSearch_subgraphs = LocalSearch(graph,SG);
 
     // compute the number of common edges between the two subgraphs
     int commonEdges_LocalSearch = calculEdgeCommun(graph,localSearch_subgraphs);
@@ -99,6 +118,7 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
 /* Writting the result in the output file */
+/*
     // Count the number of output files in the directory
     int local_search_count = CountOutFilesInDirectory("../instances/local_search");
 
@@ -108,6 +128,142 @@ int main(int argc, char *argv[]) {
     // Write the result to the output file
     std::string filename = "test" + std::to_string(local_search_count) + "_local_search.out";
     WriteToFile(directory, filename, localSearch_subgraphs[0], localSearch_subgraphs[1], commonEdges_LocalSearch);
+*/
+
+/* Writte time complexity in the csv file */
+
+/* CE QUI NE FONCTIONNE PAS */
+    const string outputFileName = "../instances/local_search/execution_times_LocalSearch.csv";
+
+    // Open the file to write in
+    ofstream outputFile(outputFileName);
+    if (!outputFile.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        return 1;
+    }
+
+    // Write the header of the csv file
+    outputFile << "Nombre de points, Temps d'exécution (ms)" << endl;
+
+    GraphAdjacencyList graph_LocalSearch(0);
+    int probEdges_LocalSearch = 25;
+    vector<vector<int>> subgraphs_Const;
+    vector<vector<int>> subgraphs_LocalSearch;
+
+    int iteration = 1;
+    cout << "------------------------------------------------" << endl;
+    for (int N = 10; N <= 20; N += 2) {
+        cout << endl << "ITERATION " << iteration << " - " << N << " points - ";
+        iteration++;
+        // Génère le graphe de N points
+        graph_LocalSearch.resetAndRebuild(N, probEdges_LocalSearch);
+        // Applique l'heuristique constructive au graphe
+        subgraphs_Const = ConstructiveHeuristic(graph_LocalSearch);
+        cout << "CONSTRUCTIVE - ";
+
+        auto start = chrono::high_resolution_clock::now();
+
+        subgraphs_LocalSearch = LocalSearch(graph_LocalSearch, subgraphs_Const);
+        cout << "LOCAL - ";
+
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+        cout << "Time taken by function: "
+             << duration << " microseconds - " ;
+
+        // Écrit les informations dans le fichier CSV
+        outputFile << N << "," << duration << endl;
+        cout << "FIN" << endl;
+    }
+    cout << "HELLO" << endl;
+
+/* FIN DE CE QUI NE FONCIONNE PAS */
+
+/* J'ai un autre fichier où j'arrive à obtenir des valeurs pour le temps d'execution mais je n'arrive pas à les écrire dans le fichier CSV
+#include <iostream>
+
+#include <algorithm>
+#include <chrono>
+#include<vector>
+using namespace std;
+using namespace std::chrono;
+
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <filesystem>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+
+
+#include "model/GraphAdjacencyList.h"
+#include "exact/ExactAlgorithm.h"
+#include "constructive/ConstructiveHeuristic.h"
+#include "local_search/LocalSearchHeuristic.h"
+
+
+int main()
+{
+
+    srand(time(NULL));
+
+    const string outputFileName = "execution_times_LocalSearch.csv";
+
+    // Open the file to write in
+    ofstream outputFile(outputFileName);
+    if (!outputFile.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        return 1;
+    }
+
+    // Write the header of the csv file
+    outputFile << "Nombre de points, Temps d'exécution (ms)" << endl;
+
+    GraphAdjacencyList graph_LocalSearch(0);
+    int probEdges_LocalSearch = 25;
+    vector<vector<int>> subgraphs_Const;
+    vector<vector<int>> subgraphs_LocalSearch;
+
+    int iteration = 1;
+    for(int N = 10; N < 20; N+=2) {
+        cout << endl << "ITERATION " << iteration << " - " << N << " points - ";
+        iteration++;
+        // Génère le graphe de N points avec une probabilité d'arête de 25%
+        graph_LocalSearch.resetAndRebuild(N, probEdges_LocalSearch);
+        // Applique l'heuristique constructive au graphe
+        subgraphs_Const = ConstructiveHeuristic(graph_LocalSearch);
+
+        cout << "CONSTRUCTIVE - ";
+        // Get starting timepoint
+        auto start = high_resolution_clock::now();
+
+        // Call the function, here sort()
+        subgraphs_LocalSearch = LocalSearch(graph_LocalSearch, subgraphs_Const);
+        cout << "LOCAL - ";
+
+        // Get ending timepoint
+        auto stop = high_resolution_clock::now();
+
+        // Get duration. Substart timepoints to
+        // get duration. To cast it to proper unit
+        // use duration cast method
+        auto duration = duration_cast<microseconds>(stop - start);
+
+        cout << "Time taken by function: "
+             << duration.count() << " microseconds" << endl;
+
+        cout << "FIN" << endl;
+    }
+
+
+    return 0;
+}
+*/
+
+/* ---------------------------------------------------------------------------------- */
+
 
 /*
 //Test function ConstructiveHeuristic and calculEdgeCommun
@@ -155,7 +311,7 @@ int main(int argc, char *argv[]) {
     cout << " - ";
     affiche_vector(deduire_subgraph2(vertices, best));
 */
-    
+
 /*
 //Test function calculEdgeCommun
     vector<vector<int>> subgraphs ;

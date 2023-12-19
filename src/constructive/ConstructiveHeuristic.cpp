@@ -10,11 +10,11 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
     }
 
     //TEST : verifie all vertex
-    cout << "allvertex : " ;
-    for(int i=0; i<allVertex.size(); i++){
-        cout << allVertex[i] << " ";
-    }
-    cout << endl;
+//    cout << "allvertex : " ;
+//    for(int i=0; i<allVertex.size(); i++){
+//        cout << allVertex[i] << " ";
+//    }
+//    cout << endl;
 
     vector<int> V1;
     vector<int> V2;
@@ -28,7 +28,7 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
         }
     }
     //TEST : high vertex
-    cout << "high vertex : " << vertexHighDegree << endl;
+    //cout << "high vertex : " << vertexHighDegree << endl;
     V1.push_back(vertexHighDegree);
 
     int vertex = vertexHighDegree;
@@ -36,15 +36,15 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
     allVertex.erase(posVertex);
 
     //TEST : verifie si high vertex a ete enlever de allvertex
-    cout << "allvertex : " ;
-    for(int i=0; i<allVertex.size(); i++){
-        cout << allVertex[i] << " ";
-    }
-    cout << endl;
+//    cout << "allvertex : " ;
+//    for(int i=0; i<allVertex.size(); i++){
+//        cout << allVertex[i] << " ";
+//    }
+//    cout << endl;
 
     //Rempli V1
     while(V1.size() < n){
-        cout << "vertex : " << vertex << endl;
+        //cout << "vertex : " << vertex << endl;
         //recherche tout les voisins de vertex encore ds allVertex
         vector<int> tabNeighbor;
         for(const int& neighbor : G.adjacencyList[vertex]){
@@ -57,33 +57,33 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
         //verifie si vertex a encore des voisins ds allVertex
         if(!tabNeighbor.empty()){
             //TEST
-            cout << "tabNeighbor : ";
-            for(int i=0; i<tabNeighbor.size(); i++){
-                cout << tabNeighbor[i] << " ";
-            }
-            cout << endl;
+//            cout << "tabNeighbor : ";
+//            for(int i=0; i<tabNeighbor.size(); i++){
+//                cout << tabNeighbor[i] << " ";
+//            }
+//            cout << endl;
 
             int &v = tabNeighbor[0];
             for(const int& neighbor : G.adjacencyList[vertex]){
                 //verifie si le voisin est ds allvertex
                 bool isInAllVertex = valPresent(allVertex, neighbor);
                 //TEST
-                cout << neighbor << " est ds all vertex : " << isInAllVertex << endl;
-                //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
-                cout << "degree v : " << tabDegrees[v] << endl;
-                cout << "degree neighbor : " << tabDegrees[neighbor] << endl;
+//                cout << neighbor << " est ds all vertex : " << isInAllVertex << endl;
+//                //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
+//                cout << "degree v : " << tabDegrees[v] << endl;
+//                cout << "degree neighbor : " << tabDegrees[neighbor] << endl;
                 if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == 1){
                     v = neighbor;
                 }
             }
             //TEST
-            cout << "v choisit : " << v << endl;
+            //cout << "v choisit : " << v << endl;
             //verifie si la valeur est pas deja présente ds V1
             bool var = valPresent(V1, v);
             //TEST
-            cout << "v est deja present ds V1 : " << var << endl;
+            //cout << "v est deja present ds V1 : " << var << endl;
             if(var == 0){
-                cout << "ok v pas present ds V1" << endl;
+                //cout << "ok v pas present ds V1" << endl;
                 V1.push_back(v);        //ajoute le sommet ds V1
                 auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
                 allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
@@ -96,7 +96,7 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
         //regarde les autres sommets ds V1 pour trouver des voisins de + haut degre
         //if(tabNeighbor.empty()){
         else{
-            cout << "rentre"<< endl;
+            //cout << "rentre"<< endl;
             int v;
             for(const int &elem : V1){
                 int v = V1[1];
@@ -143,18 +143,18 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
 
     vectors.push_back(V1);
     //TEST
-    cout << "V1 : ";
-    for(int i=0; i<vectors[0].size(); i++){
-        cout << vectors[0][i] << " ";
-    }
-    cout << endl;
+//    cout << "V1 : ";
+//    for(int i=0; i<vectors[0].size(); i++){
+//        cout << vectors[0][i] << " ";
+//    }
+//    cout << endl;
     vectors.push_back(V2);
-    //TEST
-    cout << "V2 : ";
-    for(int i=0; i<vectors[1].size(); i++){
-        cout << vectors[1][i] << " ";
-    }
-    cout << endl;
+//    //TEST
+//    cout << "V2 : ";
+//    for(int i=0; i<vectors[1].size(); i++){
+//        cout << vectors[1][i] << " ";
+//    }
+//    cout << endl;
     return vectors;
 }
 
