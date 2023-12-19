@@ -56,13 +56,11 @@ int main(int argc, char *argv[]) {
     
     //Crée un graph de manière aléatoire avec maximum 20 sommets
     srand(time(NULL));
-    /*
     int numVertices = rand()%20+1;
     if(numVertices%2 !=0){      //verifier nombre de sommets paire
         numVertices = numVertices + 1;
     }
     GraphAdjacencyList graph(numVertices);
-
     int edges = (numVertices*(numVertices-1))/2;
     int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
     int numEdges = 0;
@@ -88,22 +86,19 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-     */
 
-
+    /*
     GraphAdjacencyList graph(6);
     graph.addEdge(0,3);
     graph.addEdge(0,2);
     graph.addEdge(0,1);
     graph.addEdge(0,4);
     graph.addEdge(2,5);
-    graph.addEdge(4,2);
-
+    graph.addEdge(4,2);*/
 
     cout << "Nombre de sommet : " << graph.V << endl;
-    /*
     cout << "Nombre d'arretes maximum : " << numEdgesMax << endl;
-    cout << "Nombre d'arretes : " << numEdges << endl; */
+    cout << "Nombre d'arretes : " << numEdges << endl;
     graph.printGraph();
 
     vector<int> tabDegrees = graph.allDegrees();
@@ -112,33 +107,77 @@ int main(int argc, char *argv[]) {
         cout << elem << " ";
     }
     cout << "]" << endl;
-/* <-------------# Test resetAndRebuild #------------->*/
-//    graph.resetAndRebuild(10,25);
-//
-//    cout << "Nombre de sommet : " << graph.V << endl;
-//
-//    graph.printGraph();
-//
-//    tabDegrees = graph.allDegrees();
-//    cout << "Tableau degres : [";
-//    for(const int &elem : tabDegrees){
-//        cout << elem << " ";
-//    }
-//    cout << "]" << endl;
 
-    /*
-    cout << "CONSTRUCTIVE HEURISTIC" << endl;
-    vector<vector<int>> subgraphs = ConstructiveHeuristic(graph);
+/* ---------------------------------------------------------------------------------- */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Exact \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* ---------------------------------------------------------------------------------- */
+    cout << "#---------------- EXACT ----------------#" << endl;
+/* Execution of the exact algorithm */
 
-    int edgesCommuns = calculEdgeCommun(graph,subgraphs);
-    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
-    */
+/*
+    // ALGORITHME EXACT test avec le graphe G
+    cout << "\nALGO EXACT" << endl;
+    vector<int> vertices = {};
+    for (int i = 0; i < G.V; ++i) {
+        vertices.push_back(i);
+    }
+    int min_cut = numeric_limits<int>::max();
+    vector<int> best = {};
+    powerSet(G, vertices, min_cut, best);
+    cout << "==> Min cut : " << min_cut << endl;
+    cout << "==> Best partition : ";
+    affiche_vector(best);
+    cout << " - ";
+    affiche_vector(deduire_subgraph2(vertices, best));
+*/
+
+
+/* ---------------------------------------------------------------------------------- */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Constructiv Heuristic \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* ---------------------------------------------------------------------------------- */
+    cout << "#---------------- CONSTRUCTIVE HEURISTIC ----------------#" << endl;
+/* Execution of the constructive heuristic algorithm */
+
+    // Apply the constructive heuristic to the graph
+    vector<vector<int>> constructiveHeuristic_subgraphs = ConstructiveHeuristic(graph);
+
+    // compute the number of common edges between the two subgraphs
+    int commonEdges_ConstructiveHeuristic = calculEdgeCommun(graph,constructiveHeuristic_subgraphs);
+
+    // print the result expected in the output file
+    // FIRST LINE : the number vertices of the graph followed by the number of edges of the solution
+    cout << constructiveHeuristic_subgraphs[0].size()+constructiveHeuristic_subgraphs[1].size() << " " << commonEdges_ConstructiveHeuristic << endl;
+
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : constructiveHeuristic_subgraphs[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : constructiveHeuristic_subgraphs[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
+/* Writting the result in the output file */
+    // Count the number of output files in the directory
+    int constructive_heuristic_count = CountOutFilesInDirectory("../instances/constructive");
+
+    // Directory to save the file
+    std::string directory_constructive = "../instances/constructive/";
+
+    // Write the result to the output file
+    std::string filename_constructive = "test" + std::to_string(constructive_heuristic_count) + "_constructive.out";
+    WriteToFile(directory_constructive, filename_constructive, constructiveHeuristic_subgraphs[0], constructiveHeuristic_subgraphs[1], commonEdges_ConstructiveHeuristic);
+
 
 /* ---------------------------------------------------------------------------------- */
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Local Search \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
 /* ---------------------------------------------------------------------------------- */
     cout << "#---------------- LOCAL SEARCH ----------------#" << endl;
-/* Execution of the local search algortihm */
+/* Execution of the local search algorithm */
     // Apply the local search heuristic to the graph
     vector<vector<int>> SG = ConstructiveHeuristic(graph);
     vector<vector<int>> localSearch_subgraphs = LocalSearch(graph,SG);
@@ -163,17 +202,24 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
 /* Writting the result in the output file */
-/*
     // Count the number of output files in the directory
     int local_search_count = CountOutFilesInDirectory("../instances/local_search");
 
     // Directory to save the file
-    std::string directory = "../instances/local_search/";
+    std::string directory_localSearch = "../instances/local_search/";
 
     // Write the result to the output file
-    std::string filename = "test" + std::to_string(local_search_count) + "_local_search.out";
-    WriteToFile(directory, filename, localSearch_subgraphs[0], localSearch_subgraphs[1], commonEdges_LocalSearch);
-*/
+    std::string filename_localSearch = "test" + std::to_string(local_search_count) + "_local_search.out";
+    WriteToFile(directory_localSearch, filename_localSearch, localSearch_subgraphs[0], localSearch_subgraphs[1], commonEdges_LocalSearch);
+
+
+/* ---------------------------------------------------------------------------------- */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Tabu Search \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* ---------------------------------------------------------------------------------- */
+    cout << "#---------------- TABU SEARCH ----------------#" << endl;
+/* Execution of the local search algorithm */
+
+
 
 /* Writte time complexity in the csv file */
 
@@ -223,6 +269,9 @@ int main(int argc, char *argv[]) {
     cout << "HELLO" << endl;
 
 /* FIN DE CE QUI NE FONCIONNE PAS */
+
+    return 0;
+}
 
 /* J'ai un autre fichier où j'arrive à obtenir des valeurs pour le temps d'execution mais je n'arrive pas à les écrire dans le fichier CSV
 #include <iostream>
@@ -306,77 +355,3 @@ int main()
     return 0;
 }
 */
-
-/* ---------------------------------------------------------------------------------- */
-
-
-/*
-//Test function ConstructiveHeuristic and calculEdgeCommun
-    int numVertices = 6;
-    GraphAdjacencyList G(numVertices);
-    G.addEdge(1,2);
-    G.addEdge(1,3);
-    G.addEdge(1,4);
-    G.addEdge(2,3);
-    G.addEdge(2,4);
-    G.addEdge(2,5);
-    G.addEdge(3,5);
-    G.addEdge(3,0);
-    G.addEdge(4,5);
-    G.addEdge(5,0);
-    G.printGraph();
-
-    vector<int> tabDegrees = G.allDegrees();
-    cout << "Tableau degres : [";
-    for(const int &elem : tabDegrees){
-        cout << elem << " ";
-    }
-    cout << "]" << endl;
-
-    cout << "CONSTRUCTIVE HEURISTIC" << endl;
-    vector<vector<int>> subgraphs = ConstructiveHeuristic(G);
-
-    int edgesCommuns = calculEdgeCommun(G,subgraphs);
-    cout << "nbr arretes communes entre les deux sous graphes : " << edgesCommuns << endl;
-*/
-
-/*
-    // ALGORITHME EXACT test avec le graphe G
-    cout << "\nALGO EXACT" << endl;
-    vector<int> vertices = {};
-    for (int i = 0; i < G.V; ++i) {
-        vertices.push_back(i);
-    }
-    int min_cut = numeric_limits<int>::max();
-    vector<int> best = {};
-    powerSet(G, vertices, min_cut, best);
-    cout << "==> Min cut : " << min_cut << endl;
-    cout << "==> Best partition : ";
-    affiche_vector(best);
-    cout << " - ";
-    affiche_vector(deduire_subgraph2(vertices, best));
-*/
-
-/*
-//Test function calculEdgeCommun
-    vector<vector<int>> subgraphs ;
-    vector<int> V1 = {1,4,5};
-    subgraphs.push_back(V1);
-    vector<int> V2 = {2,3,0};
-    subgraphs.push_back(V2);
-
-    for(const auto& sousgraph : subgraphs){
-        cout << "sous graph : ";
-        for(const int& element : sousgraph){
-            cout << element << " ";
-        }
-        cout << endl;
-    }
-
-    int som = calculEdgeCommun(G,subgraphs);
-    cout << "nbr arretes communes entre les deux sous graphes : " << som <<  " (6)" <<endl;
-*/
-
-
-    return 0;
-}

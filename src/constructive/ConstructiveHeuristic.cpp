@@ -3,49 +3,31 @@
 
 vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
     vector<int> tabDegrees = G.allDegrees();
-    int n = (G.V)/2;    //nombre de sommets max pr V1 et V2
-    vector<int> allVertex;      //vector avec tout les vertex encore à placer
+    int n = (G.V)/2;    //number maximum of vertices for V1 and V2
+    vector<int> allVertex;      //vector with all vertices to place
     for(int i=0; i<G.V; i++){
         allVertex.push_back(i);
     }
-
-    //TEST : verifie all vertex
-//    cout << "allvertex : " ;
-//    for(int i=0; i<allVertex.size(); i++){
-//        cout << allVertex[i] << " ";
-//    }
-//    cout << endl;
-
     vector<int> V1;
     vector<int> V2;
     vector<vector<int>> vectors;
 
-    //Ajout ds V1 sommet plus haut degré
+    //Put in V1 the vertex with the highest degree
     int vertexHighDegree = 0;
     for(int i=1; i<tabDegrees.size(); i++){
         if(tabDegrees[vertexHighDegree] < tabDegrees[i]){
-            vertexHighDegree = i;       //prend le premier sommet le plus haut si egalite
+            vertexHighDegree = i;       //take the first vertex with highest deggree if there is equality
         }
     }
-    //TEST : high vertex
-    //cout << "high vertex : " << vertexHighDegree << endl;
     V1.push_back(vertexHighDegree);
 
     int vertex = vertexHighDegree;
     auto posVertex = find(allVertex.begin(), allVertex.end(), vertex);
     allVertex.erase(posVertex);
 
-    //TEST : verifie si high vertex a ete enlever de allvertex
-//    cout << "allvertex : " ;
-//    for(int i=0; i<allVertex.size(); i++){
-//        cout << allVertex[i] << " ";
-//    }
-//    cout << endl;
-
-    //Rempli V1
+    //Fill V1
     while(V1.size() < n){
-        //cout << "vertex : " << vertex << endl;
-        //recherche tout les voisins de vertex encore ds allVertex
+        //search all vertex neighbors still in allVertex
         vector<int> tabNeighbor;
         for(const int& neighbor : G.adjacencyList[vertex]){
             bool isInAllVertex = valPresent(allVertex, neighbor);
@@ -54,49 +36,31 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
             }
         }
 
-        //verifie si vertex a encore des voisins ds allVertex
+        //checks if vertex still has neighbors ds allVertex
         if(!tabNeighbor.empty()){
-            //TEST
-//            cout << "tabNeighbor : ";
-//            for(int i=0; i<tabNeighbor.size(); i++){
-//                cout << tabNeighbor[i] << " ";
-//            }
-//            cout << endl;
-
             int &v = tabNeighbor[0];
             for(const int& neighbor : G.adjacencyList[vertex]){
-                //verifie si le voisin est ds allvertex
+                //checks if the neighbor is ds allvertex
                 bool isInAllVertex = valPresent(allVertex, neighbor);
-                //TEST
-//                cout << neighbor << " est ds all vertex : " << isInAllVertex << endl;
-//                //recupere sommet + haut degre ds les voisins et verifie si present ds allVertex
-//                cout << "degree v : " << tabDegrees[v] << endl;
-//                cout << "degree neighbor : " << tabDegrees[neighbor] << endl;
+                //get the top from the highest degree of the neighbors and check if present ds allVertex
                 if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == 1){
                     v = neighbor;
                 }
             }
-            //TEST
-            //cout << "v choisit : " << v << endl;
-            //verifie si la valeur est pas deja présente ds V1
+            //check if vertex is not in V1
             bool var = valPresent(V1, v);
-            //TEST
-            //cout << "v est deja present ds V1 : " << var << endl;
             if(var == 0){
-                //cout << "ok v pas present ds V1" << endl;
-                V1.push_back(v);        //ajoute le sommet ds V1
-                auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //recherche la position de v ds allVertex
-                allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
-                auto posTabNeighbor = find(tabNeighbor.begin(), tabNeighbor.end(),v);
-                tabNeighbor.erase(posTabNeighbor);
+                V1.push_back(v);        //put the vertex in V1
+                auto posAllVertex = find(allVertex.begin(), allVertex.end(), v);     //searches for the position of v in allVertex
+                allVertex.erase(posAllVertex);       //erase the vertex of allVertex
+                auto posTabNeighbor = find(tabNeighbor.begin(), tabNeighbor.end(),v);   //searches for the position of v in tabNeighbors
+                tabNeighbor.erase(posTabNeighbor);      //erase the vertex of tabNeighbors
             }
 
         }
 
-        //regarde les autres sommets ds V1 pour trouver des voisins de + haut degre
-        //if(tabNeighbor.empty()){
+            //look at the other vertices in V1 to find neighbors of higher degree
         else{
-            //cout << "rentre"<< endl;
             int v;
             for(const int &elem : V1){
                 int v = V1[1];
@@ -107,54 +71,35 @@ vector<vector<int>> ConstructiveHeuristic(GraphAdjacencyList G){
                 }
                 for(const int& neighbor : G.adjacencyList[v]){
                     vertex = G.adjacencyList[v][0];
-                    //verifie que le voisin est ds allvertex
+                    //checks if the neighbor is ds allvertex
                     bool isInAllVertex = valPresent(allVertex, neighbor);
-                    //recupère sommet + haut degre ds les voisins et verifie si present ds allVertex
+                    //get the top from the highest degree of the neighbors and check if present ds allVertex
                     if(tabDegrees[vertex] < tabDegrees[neighbor] && isInAllVertex == true){
                         vertex = neighbor;
                     }
                 }
-                /*for(const int& neighbor : G.adjacencyList[elem]){
-                    //verifie que le voisin est ds allvertex
-                    bool isInAllVertex = valPresent(allVertex, neighbor);
-                    //recupère sommet + haut degre ds les voisins et verifie si present ds allVertex
-                    if(tabDegrees[v] < tabDegrees[neighbor] && isInAllVertex == true){
-                        v = neighbor;
-                    }
-                }*/
             }
-            //verifie si la valeur est pas deja présente ds V1
+            //check if vertex is not in V1
             bool var = valPresent(V1, vertex);
             if(var == false){
-                V1.push_back(vertex);        //ajoute le sommet ds V1
-                auto posAllVertex = find(allVertex.begin(), allVertex.end(), vertex);     //recherche la position de v ds allVertex
-                allVertex.erase(posAllVertex);       //supprime le sommet ds allVertex
+                V1.push_back(vertex);        //put the vertex in V1
+                auto posAllVertex = find(allVertex.begin(), allVertex.end(), vertex);     //searches for the position of v in allVertex
+                allVertex.erase(posAllVertex);       //erase the vertex of allVertex
             }
         }
     }
 
-    //Rempli V2 avec les sommets qui ne sont pas dans V1
+    //Fill V2 with all vertices not present in V1
     for(int i=0; i<G.V; i++){
-        bool var = valPresent(V1, i);       //verifie si la valeur est deja ds V1
+        bool var = valPresent(V1, i);       //vcheck if vertex is in V1
         if(var == false){
             V2.push_back(i);
         }
     }
 
+    //Fill vectors with both subgraphs
     vectors.push_back(V1);
-    //TEST
-//    cout << "V1 : ";
-//    for(int i=0; i<vectors[0].size(); i++){
-//        cout << vectors[0][i] << " ";
-//    }
-//    cout << endl;
     vectors.push_back(V2);
-//    //TEST
-//    cout << "V2 : ";
-//    for(int i=0; i<vectors[1].size(); i++){
-//        cout << vectors[1][i] << " ";
-//    }
-//    cout << endl;
     return vectors;
 }
 
