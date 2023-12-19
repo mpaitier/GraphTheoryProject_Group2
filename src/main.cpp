@@ -114,21 +114,24 @@ int main(int argc, char *argv[]) {
     cout << "#---------------- EXACT ----------------#" << endl;
 /* Execution of the exact algorithm */
 
-
-    // ALGORITHME EXACT test avec le graphe G
-    cout << "\nALGO EXACT" << endl;
     vector<int> vertices = {};
     for (int i = 0; i < graph.V; ++i) {
         vertices.push_back(i);
     }
     int min_cut = numeric_limits<int>::max();
     vector<int> best = {};
-    powerSet(graph, vertices, min_cut, best);
-    cout << "==> Min cut : " << min_cut << endl;
-    cout << "==> Best partition : ";
+    ExactAlgorithm(graph, vertices, min_cut, best);
+
+    // Affichage Ligne 1
+    cout << vertices.size() << " " << min_cut << endl;
+    // Affichage Ligne 2
+    vector<int> subgraph2 = deduire_subgraph2(vertices, best);
+    cout << "V1 : ";
     affiche_vector(best);
-    cout << " - ";
-    affiche_vector(deduire_subgraph2(vertices, best));
+    cout << endl;
+    //Affichage Ligne 3
+    cout << "V2 : ";
+    affiche_vector(subgraph2);
     cout << endl;
 
     
