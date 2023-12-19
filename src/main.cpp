@@ -52,28 +52,26 @@ int main(int argc, char *argv[]) {
     // vector<int> edges : vecteur d'entiers correspondant aux arêtes
     // ----------------------------------------------------------------
     
-    ifstream input_file("../filename.in");
+    ifstream input_file("../instances/filename.in");
 
+    int nbVertices;
+    int nbEdges;
+    vector<int> edges = {};
+    
     if(input_file)
     {
         string ligne;
         input_file.seekg(0, ios::beg);
-
-        int nbVertices;
-        int nbEdges;
 
         input_file >> nbVertices;
         input_file >> nbEdges;
 
         vector<int> edges;
 
-        for (int i = 0; i < nbEdges; ++i) {
-            int u, v, weight;
-            input_file >> u >> v >> weight;
-
-            edges.push_back(u);
-            edges.push_back(v);
-            edges.push_back(weight);
+        for (int i = 0; i < nbEdges*2; ++i) {
+            int elem;
+            input_file >> elem;
+            edges.push_back(elem);
         }
     }
     else
@@ -81,6 +79,15 @@ int main(int argc, char *argv[]) {
         cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
     }
     input_file.close();
+
+    // Création d'un graphe à partir des valeurs d'un fichier input
+    GraphAdjacencyList graph(nbVertices);
+    int i = 0;
+    while(i < nbEdges*2) {
+        graph.addEdge(edges[i], edges[i+1]);
+        i = i + 2;
+    }
+    
 */
 
 /*
