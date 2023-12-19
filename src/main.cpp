@@ -114,22 +114,34 @@ int main(int argc, char *argv[]) {
     cout << "#---------------- EXACT ----------------#" << endl;
 /* Execution of the exact algorithm */
 
-/*
+
     // ALGORITHME EXACT test avec le graphe G
     cout << "\nALGO EXACT" << endl;
     vector<int> vertices = {};
-    for (int i = 0; i < G.V; ++i) {
+    for (int i = 0; i < graph.V; ++i) {
         vertices.push_back(i);
     }
     int min_cut = numeric_limits<int>::max();
     vector<int> best = {};
-    powerSet(G, vertices, min_cut, best);
+    powerSet(graph, vertices, min_cut, best);
     cout << "==> Min cut : " << min_cut << endl;
     cout << "==> Best partition : ";
     affiche_vector(best);
     cout << " - ";
     affiche_vector(deduire_subgraph2(vertices, best));
-*/
+    cout << endl;
+
+    
+    /* Writting the result in the output file */
+    // Count the number of output files in the directory
+    int exact_count = CountOutFilesInDirectory("../instances/exact");
+
+    // Directory to save the file
+    std::string directory_exact = "../instances/exact/";
+
+    // Write the result to the output file
+    std::string filename_exact = "test" + std::to_string(exact_count) + "_exact.out";
+    WriteToFile(directory_exact, filename_exact, best, subgraph2, min_cut);
 
 
 /* ---------------------------------------------------------------------------------- */
