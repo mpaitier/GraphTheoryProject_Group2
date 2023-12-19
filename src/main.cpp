@@ -41,15 +41,11 @@ int main(int argc, char *argv[]) {
             edges.push_back(v);
             edges.push_back(weight);
         }
-
-
     }
     else
     {
         cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
     }
-
-
     input_file.close();
 */
 
@@ -236,9 +232,9 @@ int main(int argc, char *argv[]) {
 
 
 
-/* Writte time complexity in the csv file */
+/* Write time complexity in the csv file */
 
-/* CE QUI NE FONCTIONNE PAS */
+/* CE QUI NE FONCTIONNE PAS ENFIN PETET MAINTENANT*/
     const string outputFileName = "../instances/local_search/execution_times_LocalSearch.csv";
 
     // Open the file to write in
@@ -258,7 +254,7 @@ int main(int argc, char *argv[]) {
 
     int iteration = 1;
     cout << "------------------------------------------------" << endl;
-    for (int N = 10; N <= 20; N += 2) {
+    for (int N = 10; N <= 40; N += 10) {
         cout << endl << "ITERATION " << iteration << " - " << N << " points - ";
         iteration++;
         // Génère le graphe de N points
@@ -273,15 +269,15 @@ int main(int argc, char *argv[]) {
         cout << "LOCAL - ";
 
         auto end = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
-        cout << "Time taken by function: "
-             << duration << " microseconds - " ;
+        std::chrono::duration<double> temps_execution = end - start;
+
+        cout << "Time taken by function: " << temps_execution.count() << " microseconds - " ;
 
         // Écrit les informations dans le fichier CSV
-        outputFile << N << "," << duration << endl;
+        outputFile << N << ", " << temps_execution.count() << endl;
+
         cout << "FIN" << endl;
     }
-    cout << "HELLO" << endl;
 
 /* FIN DE CE QUI NE FONCIONNE PAS */
 
@@ -360,8 +356,7 @@ int main()
         // use duration cast method
         auto duration = duration_cast<microseconds>(stop - start);
 
-        cout << "Time taken by function: "
-             << duration.count() << " microseconds" << endl;
+        cout << "Time taken by function: " << duration.count() << " microseconds" << endl;
 
         cout << "FIN" << endl;
     }
