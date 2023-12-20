@@ -14,10 +14,13 @@
 /* --------- ALGORITHM CHOICE --------- */
 //#define EXACT
 //#define CONSTRUCTIVE
-//#define LOCAL
+#define LOCAL
 //#define TABU
 
-#define ALL
+//#define ALL
+
+/* --------- INPUT ? --------- */
+//#define INPUT
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
 
@@ -32,91 +35,11 @@ int main(int argc, char *argv[]) {
 
     int step = 2;
     int N;
-    int N_base = 6;            // number of vertices at the beginning
+    int N_base = 10;            // number of vertices at the beginning
     int probEdges = 25;         // probability of having an edge between two vertices
-    int maxIterations = 100;    // maximum number of iterations for every algorithm
+    int maxIterations = 200;    // maximum number of iterations for every algorithm
 
-/*
-    // ----------------------------------------------------------------
-    // Récupérer les données du fichier input
-    // ----------------------------------------------------------------
-    // int nbVertices : nombre de sommets
-    // int nbEdges : nombre d'arêtes
-    // vector<int> edges : vecteur d'entiers correspondant aux arêtes
-    // ----------------------------------------------------------------
-    
-    ifstream input_file("../instances/filename.in");
-
-    int nbVertices;
-    int nbEdges;
-    vector<int> edges = {};
-    
-    if(input_file)
-    {
-        string ligne;
-        input_file.seekg(0, ios::beg);
-
-        input_file >> nbVertices;
-        input_file >> nbEdges;
-
-        vector<int> edges;
-
-        for (int i = 0; i < nbEdges*2; ++i) {
-            int elem;
-            input_file >> elem;
-            edges.push_back(elem);
-        }
-    }
-    else
-    {
-        cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
-    }
-    input_file.close();
-
-    // Création d'un graphe à partir des valeurs d'un fichier input
-    GraphAdjacencyList graph(nbVertices);
-    int i = 0;
-    while(i < nbEdges*2) {
-        graph.addEdge(edges[i], edges[i+1]);
-        i = i + 2;
-    }
-    
-*/
-/*
-//Crée un graph de manière aléatoire avec maximum 20 sommets
-    srand(time(NULL));
-    int numVertices = rand()%20+1;
-    if(numVertices%2 !=0){      //verifier nombre de sommets paire
-        numVertices = numVertices + 1;
-    }
-    GraphAdjacencyList graph(numVertices);
-    int edges = (numVertices*(numVertices-1))/2;
-    int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
-    int numEdges = 0;
-    for(int i=0; i<numEdgesMax; i++){
-        int randomVertex1 = rand() %numVertices;
-        int randomVertex2 = rand() %numVertices;
-        if(randomVertex1 != randomVertex2){
-            if(graph.adjacencyList[randomVertex1].empty()){
-                graph.addEdge(randomVertex1, randomVertex2);
-                numEdges ++;
-            }
-            else{
-                bool valid = true;
-                for(const int &neighbor : graph.adjacencyList[randomVertex1]){
-                    if(neighbor == randomVertex2){
-                        valid = false;
-                    }
-                }
-                if(valid){
-                    graph.addEdge(randomVertex1, randomVertex2);
-                    numEdges ++;
-                }
-            }
-        }
-    }
-*/
-
+#ifdef INPUT
     // ------------------------------------------------
     // Create input file using the random graph
     // ----------------------------------------------
@@ -182,27 +105,7 @@ int main(int argc, char *argv[]) {
             inFile << "  ";
     }
 
-
-    /*
-    GraphAdjacencyList graph(6);
-    graph.addEdge(0,3);
-    graph.addEdge(0,2);
-    graph.addEdge(0,1);
-    graph.addEdge(0,4);
-    graph.addEdge(2,5);
-    graph.addEdge(4,2);*/
-
-//    cout << "Nombre de sommet : " << graph.V << endl;
-//    cout << "Nombre d'arretes maximum : " << numEdgesMax << endl;
-//    cout << "Nombre d'arretes : " << numEdges << endl;
-//    graph.printGraph();
-//
-//    vector<int> tabDegrees = graph.allDegrees();
-//    cout << "Tableau degres : [";
-//    for(const int &elem : tabDegrees){
-//        cout << elem << " ";
-//    }
-//    cout << "]" << endl;
+#endif
 
 /* --------------------------------------------------------------------------- */
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Exact \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
