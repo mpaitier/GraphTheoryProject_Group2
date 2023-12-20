@@ -5,7 +5,7 @@
 #include "model/GraphAdjacencyList.h"
 #include "exact/ExactAlgorithm.h"
 #include "constructive/ConstructiveHeuristic.h"
-#include "local_search/LocalSearchHeuristic.h"
+#include "tabu_search/TabuSearch.h"
 
 /* ----------------------------------------------------------------------------- */
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// DEFINES \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
@@ -17,19 +17,10 @@
 //#define LOCAL
 //#define TABU
 
-//#define ALL
+#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
-/* --------- PRINT TEST --------- */
-//#define TEST_EXACT_CSV
-//#define TEST_CONSTRUCTIVE_CSV
-//#define TEST_LOCAL_CSV
-//#define TEST_TABU_CSV
 
-//#define TEST_EXACT_OUTPUT
-//#define TEST_CONSTRUCTIVE_OUTPUT
-//#define TEST_LOCAL_OUTPUT
-//#define TEST_TABU_OUTPUT
 
 int main(int argc, char *argv[]) {
 
@@ -37,11 +28,13 @@ int main(int argc, char *argv[]) {
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// GENERAL PARAMETERS \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
 /* ---------------------------------------------------------------------------------------- */
 
-    int step = 6;
+    srand(time(NULL));
+
+    int step = 2;
     int N;
-    int N_base = 10;            // number of vertices at the beginning
+    int N_base = 6;            // number of vertices at the beginning
     int probEdges = 25;         // probability of having an edge between two vertices
-    int maxIterations = 200;    // maximum number of iterations for every algorithm
+    int maxIterations = 100;    // maximum number of iterations for every algorithm
 
 /*
     // ----------------------------------------------------------------
@@ -335,8 +328,6 @@ int main(int argc, char *argv[]) {
         cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
         return 1;
     }
-    // Write the header of the csv file
-    outputFileConstructive << "Number of vertices, Execution time (seconds)" << endl;
 
 /* PARAMETERS TO PRINT FOR THE TEST */
     int iteration_constructive = 1;
@@ -461,7 +452,9 @@ int main(int argc, char *argv[]) {
         // write the number of vertices and the execution time in the csv file
         outputFileLocal << N << ", " << temps_execution_local << endl;
 
-        cout << "FIN" << endl;
+        commonEdges_LocalSearch = calculEdgeCommun(graph_LocalSearch,subgraphs_LocalSearch);
+
+        cout << commonEdges_LocalSearch << " - FIN" << endl;
 
 /* Writing the result in the output file */
 #ifdef OUTPUT
@@ -503,9 +496,96 @@ int main(int argc, char *argv[]) {
 /* --------------------------------------------------------------------------------- */
 
 #ifdef TABU
-    cout << "#---------------- TABU SEARCH ----------------#" << endl;
-/* Execution of the local search algorithm */
 
+    cout << "#---------------- TABU SEARCH ----------------#" << endl;
+
+/* #==========# Initialize the parameters that will be used #==========# */
+
+/* PARAMETERS FOR THE ALGORTIHM */
+    // Number of vertices
+    N = N_base;
+    // Initialize the graph
+    GraphAdjacencyList graph_TabuSearch(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_TabuSearch;
+
+/* PARAMETERS FOR THE FILE .out */
+    int commonEdges_TabuSearch;
+    int tabu_count;
+
+/* PARAMETERS FOR THE CSV FILE */
+    // Name of the csv file
+    const string outputFileNameTabu = "../instances/tabu_search/execution_times_TabuSearch.csv";
+    // Open the file to write in
+    ofstream outputFileTabu(outputFileNameTabu);
+    if (!outputFileTabu.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        return 1;
+    }
+
+/* PARAMETERS TO PRINT FOR THE TEST */
+    int iteration_tabu = 1;
+
+/* #==========# Execution of the local search algorithm #==========# */
+    while (N <= maxIterations) {
+
+        // Reset the graph and rebuild it with a new number of vertices N
+        graph_TabuSearch.resetAndRebuild(N, probEdges);
+        cout << "ITERATION " << iteration_tabu << " - " << N << " points - ";
+
+        // start of the execution time
+        auto startTabu = chrono::high_resolution_clock::now();
+        subgraphs_TabuSearch = TabuSearch(graph_TabuSearch);
+// We put the result of the tabu search algorithm in a var because we need it to compute the number of common edges for the output file
+
+        cout << "TABU - ";
+
+        // end of the execution time
+        auto endTabu = chrono::high_resolution_clock::now();
+        int temps_execution_tabu = std::chrono::duration_cast<chrono::microseconds>(endTabu - startTabu).count();
+
+        cout << "Time taken by function: " << temps_execution_tabu << " microseconds - " ;
+
+        // write the number of vertices and the execution time in the csv file
+        outputFileTabu << N << ", " << temps_execution_tabu << endl;
+
+        commonEdges_TabuSearch = calculEdgeCommun(graph_LocalSearch,subgraphs_TabuSearch);
+
+        cout << commonEdges_TabuSearch << " - FIN" << endl;
+
+/* Writing the result in the output file */
+#ifdef OUTPUT
+        // compute the number of common edges between the two subgraphs
+        commonEdges_TabuSearch = calculEdgeCommun(graph_LocalSearch,subgraphs_TabuSearch);
+        // Count the number of output files in the directory
+        tabu_count = CountOutFilesInDirectory("../instances/tabu_search");
+
+        // Directory to save the file
+        std::string directory_tabu = "../instances/tabu_search/";
+        // Write the result to the output file
+        std::string filename_tabu = "test" + std::to_string(tabu_count) + "_tabu_search.out";
+        WriteToFile(directory_tabu, filename_tabu, subgraphs_TabuSearch[0], subgraphs_TabuSearch[1], commonEdges_TabuSearch);
+
+        // print the result expected in the output file
+        // FIRST LINE : number of common edges between the two subgraphs
+        cout << subgraphs_TabuSearch[0].size()+subgraphs_TabuSearch[1].size() << " " << commonEdges_TabuSearch << endl;
+        // SECOND LINE : vertices of the first subgraph
+        cout << "V1 : ";
+        for(const int& element : subgraphs_TabuSearch[0]){
+            cout << element << " ";
+        }
+        cout << endl;
+        // THIRD LINE : vertices of the second subgraph
+        cout << "V2 : ";
+        for(const int& element : subgraphs_TabuSearch[1]){
+            cout << element << " ";
+        }
+        cout << endl;
+#endif
+
+        N += step;
+        iteration_tabu++;
+    }
 
 #endif
 
@@ -592,12 +672,12 @@ int main(int argc, char *argv[]) {
         subgraphs_ConstructiveALL = ConstructiveHeuristic(graphAll);
         //Stop the chrono
         auto endConstructive = chrono::high_resolution_clock::now();
-        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(end - start).count();
+        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(endConstructive - startConstructive).count();
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
-        cout << "Time taken by function: " << temps_execution_Constructive.count() << " microseconds " ;
+        cout << "Time taken by function: " << temps_execution_constructive << " microseconds " ;
         // Write the informations in the CSV file
-        outputFileConstructive << N << ", " << temps_execution_Constructive.count() << endl;
+        outputFileConstructiveALL << N << ", " << temps_execution_constructive << endl;
 
         /*----------LOCAL-SEARCH----------*/
         //Start the chrono
@@ -610,10 +690,29 @@ int main(int argc, char *argv[]) {
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - LOCAL - ";
         cout << "Time taken by function: " << temps_execution_local << " microseconds " ;
+
+        auto edgesLocal = calculEdgeCommun(graphAll,subgraphs_LocalSearchALL);
+        cout << " - " << edgesLocal << " edges" << endl;
         // Write the informations in the CSV file
-        outputFileLocal << N << ", " << temps_execution_local << endl;
+        outputFileLocalALL << N << ", " << temps_execution_local << endl;
 
         /*----------TABU-SEARCH----------*/
+        //Start the chrono
+        auto startTabu = chrono::high_resolution_clock::now();
+        //Execute the function
+        subgraphs_TabuSearchALL = TabuSearch(graphAll);
+        //Stop the chrono
+        auto endTabu = chrono::high_resolution_clock::now();
+        int temps_execution_tabu = std::chrono::duration_cast<chrono::microseconds>(endTabu - startTabu).count();
+
+        cout << "ITERATION " << iteration_ALL << " - " << N << " points - TABU - ";
+        cout << "Time taken by function: " << temps_execution_tabu << " microseconds " ;
+
+        auto edgesTabu = calculEdgeCommun(graphAll,subgraphs_TabuSearchALL);
+        cout << " - " << edgesTabu << " edges" << endl;
+        // Write the informations in the CSV file
+        outputFileTabuALL << N << ", " << temps_execution_tabu << endl;
+
 
         /*----------PARAMETERS----------*/
         iteration_ALL++;
