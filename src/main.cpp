@@ -33,8 +33,8 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-    int step = 2;
     int N;
+    int step = 2;
     int N_base = 10;            // number of vertices at the beginning
     int probEdges = 25;         // probability of having an edge between two vertices
     int maxIterations = 200;    // maximum number of iterations for every algorithm
