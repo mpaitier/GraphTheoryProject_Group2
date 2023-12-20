@@ -13,7 +13,7 @@
 
 /* --------- ALGORITHM CHOICE --------- */
 //#define EXACT
-//#define CONSTRUCTIVE
+#define CONSTRUCTIVE
 #define LOCAL
 //#define TABU
 
@@ -205,15 +205,15 @@ int main(int argc, char *argv[]) {
 
 /* PARAMETERS FOR THE CSV FILE */
     // Name of the csv file
-    const string outputFileName = "../instances/constructive/execution_times_Constructive.csv";
+    const string outputFileNameConstructive = "../instances/constructive/execution_times_Constructive.csv";
     // Open the file to write in
-    ofstream outputFile(outputFileName);
-    if (!outputFile.is_open()) {
+    ofstream outputFileConstructive(outputFileNameConstructive);
+    if (!outputFileConstructive.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
         return 1;
     }
     // Write the header of the csv file
-    outputFile << "Number of vertices, Execution time (seconds)" << endl;
+    outputFileConstructive << "Number of vertices, Execution time (seconds)" << endl;
 
 /* PARAMETERS TO PRINT FOR THE TEST */
     int iteration_constructive = 1;
@@ -229,7 +229,7 @@ int main(int argc, char *argv[]) {
         // start of the execution time
         auto start = chrono::high_resolution_clock::now();
         // Applique l'heuristique constructive au graphe
-        subgraphs_Constructive = ConstructiveHeuristic(graph_LocalSearch);
+        subgraphs_Constructive = ConstructiveHeuristic(graph_Constructive);
 // We put the result of the local search algorithm in a var because we need it to compute the number of common edges for the output file
 #ifdef TEST_CONSTRUCTIVE_CSV
         cout << "CONSTRUCTIVE - ";
@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
         cout << "Time taken by function: " << temps_execution_constructive.count() << " seconds - " ;
 #endif
         // write the number of vertices and the execution time in the csv file
-        outputFile << N << ", " << temps_execution_constructive.count() << endl;
+        outputFileConstructive << N << ", " << temps_execution_constructive.count() << endl;
 #ifdef TEST_CONSTRUCTIVE_CSV
         cout << "FIN" << endl;
 #endif
@@ -308,15 +308,15 @@ int main(int argc, char *argv[]) {
 
 /* PARAMETERS FOR THE CSV FILE */
     // Name of the csv file
-    const string outputFileName = "../instances/local_search/execution_times_LocalSearch.csv";
+    const string outputFileNameLocal = "../instances/local_search/execution_times_LocalSearch.csv";
     // Open the file to write in
-    ofstream outputFile(outputFileName);
-    if (!outputFile.is_open()) {
+    ofstream outputFileLocal(outputFileNameLocal);
+    if (!outputFileLocal.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
         return 1;
     }
     // Write the header of the csv file
-    outputFile << "Number of vertices, Execution time (seconds)" << endl;
+    outputFileLocal << "Number of vertices, Execution time (seconds)" << endl;
 
 /* PARAMETERS TO PRINT FOR THE TEST */
     int iteration_local = 1;
@@ -348,7 +348,7 @@ int main(int argc, char *argv[]) {
         cout << "Time taken by function: " << temps_execution_local.count() << " seconds - " ;
 #endif
         // write the number of vertices and the execution time in the csv file
-        outputFile << N << ", " << temps_execution_local.count() << endl;
+        outputFileLocal << N << ", " << temps_execution_local.count() << endl;
 #ifdef TEST_LOCAL_CSV
         cout << "FIN" << endl;
 #endif
