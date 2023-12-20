@@ -12,7 +12,7 @@
 /* ----------------------------------------------------------------------------- */
 
 /* --------- ALGORITHM CHOICE --------- */
-#define EXACT
+//#define EXACT
 //#define CONSTRUCTIVE
 //#define LOCAL
 //#define TABU
@@ -89,9 +89,8 @@ int main(int argc, char *argv[]) {
     }
     
 */
-
 /*
-    //Crée un graph de manière aléatoire avec maximum 20 sommets
+//Crée un graph de manière aléatoire avec maximum 20 sommets
     srand(time(NULL));
     int numVertices = rand()%20+1;
     if(numVertices%2 !=0){      //verifier nombre de sommets paire
@@ -124,6 +123,73 @@ int main(int argc, char *argv[]) {
         }
     }
 */
+
+    // ------------------------------------------------
+    // Create input file using the random graph
+    // ----------------------------------------------
+
+    // Count the number of input files in the directory
+    int count = CountOutFilesInDirectory("../instances/new_instances");
+    // Directory to save the file
+    std::string directory_instancesIN = "../instances/new_instances/";
+    // Name of the file
+    std::string filename_instancesIN = "test" + std::to_string(count) + ".in";
+    // Open file in writing mode
+    ofstream inFile(directory_instancesIN + "/"+ filename_instancesIN);
+
+    // Créer aléatoirement des instances dans les fichiers in
+    srand(time(NULL));
+    int numVertices = rand()%200+1;  // number of vertices (max = 200)
+
+    if(numVertices%2 !=0){      // check that there is an even number of vertices
+        numVertices = numVertices + 1;
+    }
+    GraphAdjacencyList graph(numVertices);
+    int edges = (numVertices*(numVertices-1))/2;    // max number of possible edges
+
+    vector<int> line2; // vecteur d'entiers pour l'écriture de la 2e ligne du fichier
+
+    int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
+    int numEdges = 0;   // number of existing edges
+    for(int i=0; i<numEdgesMax; i++){
+        int randomVertex1 = rand() %numVertices;
+        int randomVertex2 = rand() %numVertices;
+        if(randomVertex1 != randomVertex2){
+            if(graph.adjacencyList[randomVertex1].empty()){
+                graph.addEdge(randomVertex1, randomVertex2); // edge between randomVertex1 and randomVertex2
+                numEdges ++;
+                line2.push_back(randomVertex1); // add edge to line2
+                line2.push_back(randomVertex2); //
+            }
+            else{
+                bool valid = true;
+                for(const int &neighbor : graph.adjacencyList[randomVertex1]){
+                    if(neighbor == randomVertex2){
+                        valid = false;
+                    }
+                }
+                if(valid){
+                    graph.addEdge(randomVertex1, randomVertex2); // edge between randomVertex1 and randomVertex2
+                    numEdges ++;
+                    line2.push_back(randomVertex1); // add edge to line2
+                    line2.push_back(randomVertex2); //
+                }
+            }
+        }
+    }
+
+    inFile << numVertices << " " << numEdges << endl;  // write 1st line of the input file
+    //affiche_vector(line2);
+    // Write 2nd line of the input file
+    for (int i = 0; i < numEdges * 2; ++i) {
+        inFile << line2[i];
+        if (i % 2 == 0)
+            inFile << " ";
+        else
+            inFile << "  ";
+    }
+
+
     /*
     GraphAdjacencyList graph(6);
     graph.addEdge(0,3);

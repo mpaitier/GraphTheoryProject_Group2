@@ -176,6 +176,7 @@ void WriteToFile(const std::string& directory, const std::string& filename, cons
     }
 }
 
+
 int CountOutFilesInDirectory(const std::string& directoryPath) {
 /*
  * INPUT : a directory path
