@@ -16,20 +16,10 @@
 //#define CONSTRUCTIVE
 //#define LOCAL
 //#define TABU
-
 //#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
-/* --------- PRINT TEST --------- */
-//#define TEST_EXACT_CSV
-//#define TEST_CONSTRUCTIVE_CSV
-//#define TEST_LOCAL_CSV
-//#define TEST_TABU_CSV
 
-//#define TEST_EXACT_OUTPUT
-//#define TEST_CONSTRUCTIVE_OUTPUT
-//#define TEST_LOCAL_OUTPUT
-//#define TEST_TABU_OUTPUT
 
 int main(int argc, char *argv[]) {
 
@@ -37,11 +27,11 @@ int main(int argc, char *argv[]) {
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// GENERAL PARAMETERS \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
 /* ---------------------------------------------------------------------------------------- */
 
-    int step = 6;
+    int step = 2;
     int N;
-    int N_base = 10;            // number of vertices at the beginning
-    int probEdges = 25;         // probability of having an edge between two vertices
-    int maxIterations = 200;    // maximum number of iterations for every algorithm
+    int N_base = 6;            // number of vertices at the beginning
+    int probEdges = 75;         // probability of having an edge between two vertices
+    int maxIterations = 22;    // maximum number of iterations for every algorithm
 
 /*
     // ----------------------------------------------------------------
@@ -269,8 +259,6 @@ int main(int argc, char *argv[]) {
         cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
         return 1;
     }
-    // Write the header of the csv file
-    outputFileConstructive << "Number of vertices, Execution time (seconds)" << endl;
 
 /* PARAMETERS TO PRINT FOR THE TEST */
     int iteration_constructive = 1;
