@@ -12,14 +12,14 @@
 /* ----------------------------------------------------------------------------- */
 
 /* --------- ALGORITHM CHOICE --------- */
-//#define EXACT
-#define CONSTRUCTIVE
-#define LOCAL
+#define EXACT
+//#define CONSTRUCTIVE
+//#define LOCAL
 //#define TABU
 
-#define ALL
+//#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
-#define OUTPUT
+//#define OUTPUT
 /* --------- PRINT TEST --------- */
 //#define TEST_EXACT_CSV
 //#define TEST_CONSTRUCTIVE_CSV
@@ -152,39 +152,83 @@ int main(int argc, char *argv[]) {
 #ifdef EXACT
 
     cout << "#---------------- EXACT ----------------#" << endl;
-/* Execution of the exact algorithm */
 
-    vector<int> vertices = {};
-    for (int i = 0; i < graph.V; ++i) {
-        vertices.push_back(i);
+/* #==========# Initialize the parameters that will be used #==========# */
+
+/* PARAMETERS FOR THE ALGORTIHM */
+    // Number of vertices
+    N = N_base;
+    // Initialize the graph
+    GraphAdjacencyList graph_Exact(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_Exact;
+
+/* PARAMETERS FOR THE FILE .out */
+    int commonEdges_Exact;
+    int exact_count;
+
+/* PARAMETERS FOR THE CSV FILE */
+    // Name of the csv file
+    const string outputFileNameExact = "../instances/exact/execution_times_Exact.csv";
+    // Open the file to write in
+    ofstream outputFileExact(outputFileNameExact);
+    if (!outputFileExact.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        return 1;
     }
-    int min_cut = numeric_limits<int>::max();
-    vector<int> best = {};
-    ExactAlgorithm(graph, vertices, min_cut, best);
 
-    // FIRST LINE : the number vertices of the graph followed by the number of edges of the solution
-    cout << vertices.size() << " " << min_cut << endl;
-    // SECOND LINE : vertices of the first subgraph
-    vector<int> subgraph2 = deduire_subgraph2(vertices, best);
-    cout << "V1 : ";
-    affiche_vector(best);
-    cout << endl;
-    //THIRD LINE : vertices of the second subgraph
-    cout << "V2 : ";
-    affiche_vector(subgraph2);
-    cout << endl;
+/* PARAMETERS TO PRINT FOR THE TEST */
+    int iteration_exact = 1;
 
-    /* Writing the result in the output file */
-    // Count the number of output files in the directory
-    int exact_count = CountOutFilesInDirectory("../instances/exact");
+/* #==========# Execution of the local search algorithm #==========# */
+    while (N <= maxIterations) {
 
-    // Directory to save the file
-    std::string directory_exact = "../instances/exact/";
+        // Reset the graph and rebuild it with a new number of vertices N
+        graph_Exact.resetAndRebuild(N, probEdges);
+        cout << "ITERATION " << iteration_exact << " - " << N << " points - ";
 
-    // Write the result to the output file
-    std::string filename_exact = "test" + std::to_string(exact_count) + "_exact.out";
-    WriteToFile(directory_exact, filename_exact, best, subgraph2, min_cut);
+        // start of the execution time
+        auto startExact = chrono::high_resolution_clock::now();
+        subgraphs_Exact = Exact_Main(graph_Exact);
 
+        // end of the execution time
+        auto endExact = chrono::high_resolution_clock::now();
+        int temps_execution_exact = std::chrono::duration_cast<chrono::microseconds>(endExact - startExact).count();
+
+
+/* Writing the result in the output file */
+#ifdef OUTPUT
+        // compute the number of common edges between the two subgraphs
+        commonEdges_Exact = calculEdgeCommun(graph_Exact, subgraphs_Exact);
+        // Count the number of output files in the directory
+        exact_count = CountOutFilesInDirectory("../instances/exact");
+
+        // Directory to save the file
+        std::string directory_exact = "../instances/exact/";
+        // Write the result to the output file
+        std::string filename_exact = "test" + std::to_string(exact_count) + "_exact.out";
+        WriteToFile(directory_exact, filename_exact, subgraphs_Exact[0], subgraphs_Exact[1], commonEdges_Exact);
+
+        // print the result expected in the output file
+        // FIRST LINE : number of common edges between the two subgraphs
+        cout << subgraphs_Exact[0].size()+subgraphs_Exact[1].size() << " " << commonEdges_Exact << endl;
+        // SECOND LINE : vertices of the first subgraph
+        cout << "V1 : ";
+        for(const int& element : subgraphs_Exact[0]){
+            cout << element << " ";
+        }
+        cout << endl;
+        // THIRD LINE : vertices of the second subgraph
+        cout << "V2 : ";
+        for(const int& element : subgraphs_Exact[1]){
+            cout << element << " ";
+        }
+        cout << endl;
+#endif
+
+        N += step;
+        iteration_exact++;
+    }
 #endif
 
 
