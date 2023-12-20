@@ -12,14 +12,14 @@
 /* ----------------------------------------------------------------------------- */
 
 /* --------- ALGORITHM CHOICE --------- */
-#define EXACT
-//#define CONSTRUCTIVE
-//#define LOCAL
+//#define EXACT
+#define CONSTRUCTIVE
+#define LOCAL
 //#define TABU
 
-//#define ALL
+#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
-//#define OUTPUT
+#define OUTPUT
 /* --------- PRINT TEST --------- */
 //#define TEST_EXACT_CSV
 //#define TEST_CONSTRUCTIVE_CSV
@@ -37,11 +37,11 @@ int main(int argc, char *argv[]) {
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// GENERAL PARAMETERS \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
 /* ---------------------------------------------------------------------------------------- */
 
-    int step = 2;
+    int step = 6;
     int N;
     int N_base = 10;            // number of vertices at the beginning
     int probEdges = 25;         // probability of having an edge between two vertices
-    int maxIterations = 100;    // maximum number of iterations for every algorithm
+    int maxIterations = 200;    // maximum number of iterations for every algorithm
 
 /*
     // ----------------------------------------------------------------
@@ -150,73 +150,41 @@ int main(int argc, char *argv[]) {
 /* --------------------------------------------------------------------------- */
 
 #ifdef EXACT
+
     cout << "#---------------- EXACT ----------------#" << endl;
+/* Execution of the exact algorithm */
 
-/* #==========# Initialize the parameters that will be used #==========# */
-
-/* PARAMETERS FOR THE ALGORTIHM */
-    // Number of vertices
-    N = N_base;
-    // Initialize the graph
-    GraphAdjacencyList graph_Exact(0);
-    // Initialize the subgraphs
-    vector<vector<int>> subgraphs_Exact;
-
-
-/* PARAMETERS FOR THE FILE .out */
-    int commonEdges_Exact;
-    int exact_count;
-
-/* PARAMETERS FOR THE CSV FILE */
-    // Name of the csv file
-    const string outputFileNameExact = "../instances/exact/execution_times_exact.csv";
-    // Open the file to write in
-    ofstream outputFileExact(outputFileNameExact);
-    if (!outputFileExact.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
-        return 1;
+    vector<int> vertices = {};
+    for (int i = 0; i < graph.V; ++i) {
+        vertices.push_back(i);
     }
-    // Write the header of the csv file
-    outputFileExact << "Number of vertices, Execution time (seconds)" << endl;
+    int min_cut = numeric_limits<int>::max();
+    vector<int> best = {};
+    ExactAlgorithm(graph, vertices, min_cut, best);
 
-/* PARAMETERS TO PRINT FOR THE TEST */
-    int iteration_exact = 1;
+    // FIRST LINE : the number vertices of the graph followed by the number of edges of the solution
+    cout << vertices.size() << " " << min_cut << endl;
+    // SECOND LINE : vertices of the first subgraph
+    vector<int> subgraph2 = deduire_subgraph2(vertices, best);
+    cout << "V1 : ";
+    affiche_vector(best);
+    cout << endl;
+    //THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    affiche_vector(subgraph2);
+    cout << endl;
 
-/* #==========# Execution of the local search algorithm #==========# */
-    while (N <= maxIterations) {
+    /* Writing the result in the output file */
+    // Count the number of output files in the directory
+    int exact_count = CountOutFilesInDirectory("../instances/exact");
 
-        // Reset the graph and rebuild it with a new number of vertices N
-        graph_Exact.resetAndRebuild(N, probEdges);
+    // Directory to save the file
+    std::string directory_exact = "../instances/exact/";
 
-        // start of the execution time
-        auto start = chrono::high_resolution_clock::now();
-        subgraphs_Exact = Exact_Main(graph_Exact);
+    // Write the result to the output file
+    std::string filename_exact = "test" + std::to_string(exact_count) + "_exact.out";
+    WriteToFile(directory_exact, filename_exact, best, subgraph2, min_cut);
 
-        // end of the execution time
-        auto end = chrono::high_resolution_clock::now();
-        std::chrono::duration<double> temps_execution_local = end - start;
-
-        // write the number of vertices and the execution time in the csv file
-        outputFileExact << N << ", " << temps_execution_local.count() << endl;
-
-
-/* Writing the result in the output file */
-#ifdef OUTPUT
-        // compute the number of common edges between the two subgraphs
-        commonEdges_Exact = calculEdgeCommun(graph_Exact,subgraphs_Exact);
-        // Count the number of output files in the directory
-        exact_count = CountOutFilesInDirectory("../instances/exact");
-
-        // Directory to save the file
-        std::string directory_exact = "../instances/exact/";
-        // Write the result to the output file
-        std::string filename_exact = "test" + std::to_string(exact_count) + "_exact.out";
-        WriteToFile(directory_exact, filename_exact, subgraphs_Exact[0], subgraphs_Exact[1], commonEdges_Exact);
-#endif
-
-        N += step;
-        iteration_exact++;
-    }
 #endif
 
 
@@ -262,28 +230,22 @@ int main(int argc, char *argv[]) {
 
         // Reset the graph and rebuild it with a new number of vertices N
         graph_Constructive.resetAndRebuild(N, probEdges);
-#ifdef TEST_CONSTRUCTIVE_CSV
         cout << "ITERATION " << iteration_constructive << " - " << N << " points - ";
-#endif
+
         // start of the execution time
-        auto start = chrono::high_resolution_clock::now();
+        auto startConstructive = chrono::high_resolution_clock::now();
         // Applique l'heuristique constructive au graphe
         subgraphs_Constructive = ConstructiveHeuristic(graph_Constructive);
-// We put the result of the local search algorithm in a var because we need it to compute the number of common edges for the output file
-#ifdef TEST_CONSTRUCTIVE_CSV
+        // We put the result of the local search algorithm in a var because we need it to compute the number of common edges for the output file
         cout << "CONSTRUCTIVE - ";
-#endif
+
         // end of the execution time
-        auto end = chrono::high_resolution_clock::now();
-        std::chrono::duration<double> temps_execution_constructive = end - start;
-#ifdef TEST_CONSTRUCTIVE_CSV
-        cout << "Time taken by function: " << temps_execution_constructive.count() << " seconds - " ;
-#endif
+        auto endConstructive = chrono::high_resolution_clock::now();
+        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(endConstructive - startConstructive).count();
+        cout << "Time taken by function: " << temps_execution_constructive << " microseconds - " ;
         // write the number of vertices and the execution time in the csv file
-        outputFileConstructive << N << ", " << temps_execution_constructive.count() << endl;
-#ifdef TEST_CONSTRUCTIVE_CSV
+        outputFileConstructive << N << ", " << temps_execution_constructive << endl;
         cout << "FIN" << endl;
-#endif
 
 /* Writing the result in the output file */
 #ifdef OUTPUT
@@ -297,9 +259,9 @@ int main(int argc, char *argv[]) {
         // Write the result to the output file
         std::string filename_local = "test" + std::to_string(constructive_count) + "_constructive.out";
         WriteToFile(directory_local, filename_local, subgraphs_Constructive[0], subgraphs_Constructive[1], commonEdges_Constructive);
-#endif
 
-#ifdef TEST_CONSTRUCTIVE_OUTPUT
+
+
         // print the result expected in the output file
         // FIRST LINE : number of common edges between the two subgraphs
         cout << subgraphs_Constructive[0].size()+subgraphs_Constructive[1].size() << " " << commonEdges_Constructive << endl;
@@ -333,64 +295,57 @@ int main(int argc, char *argv[]) {
 /* #==========# Initialize the parameters that will be used #==========# */
 
 /* PARAMETERS FOR THE ALGORTIHM */
-        // Number of vertices
-        N = N_base;
-        // Initialize the graph
-        GraphAdjacencyList graph_LocalSearch(0);
-        // Initialize the subgraphs
-        vector<vector<int>> subgraphs_Const;
-        vector<vector<int>> subgraphs_LocalSearch;
+    // Number of vertices
+    N = N_base;
+    // Initialize the graph
+    GraphAdjacencyList graph_LocalSearch(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_Const;
+    vector<vector<int>> subgraphs_LocalSearch;
 
 /* PARAMETERS FOR THE FILE .out */
-        int commonEdges_LocalSearch;
-        int local_count;
+    int commonEdges_LocalSearch;
+    int local_count;
 
 /* PARAMETERS FOR THE CSV FILE */
-        // Name of the csv file
-        const string outputFileNameLocal = "../instances/local_search/execution_times_LocalSearch.csv";
-        // Open the file to write in
-        ofstream outputFileLocal(outputFileNameLocal);
-        if (!outputFileLocal.is_open()) {
-            cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
-            return 1;
-        }
-        // Write the header of the csv file
-        outputFileLocal << "Number of vertices, Execution time (seconds)" << endl;
+    // Name of the csv file
+    const string outputFileNameLocal = "../instances/local_search/execution_times_LocalSearch.csv";
+    // Open the file to write in
+    ofstream outputFileLocal(outputFileNameLocal);
+    if (!outputFileLocal.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        return 1;
+    }
 
 /* PARAMETERS TO PRINT FOR THE TEST */
-        int iteration_local = 1;
+    int iteration_local = 1;
 
 /* #==========# Execution of the local search algorithm #==========# */
-        while (N <= maxIterations) {
+    while (N <= maxIterations) {
 
-            // Reset the graph and rebuild it with a new number of vertices N
-            graph_LocalSearch.resetAndRebuild(N, probEdges);
-#ifdef TEST_LOCAL_CSV
-            cout << "ITERATION " << iteration_local << " - " << N << " points - ";
-#endif
-            // Applique l'heuristique constructive au graphe
-            subgraphs_Const = ConstructiveHeuristic(graph_LocalSearch);
-#ifdef TEST_LOCAL_CSV
-            cout << "CONSTRUCTIVE - ";
-#endif
-            // start of the execution time
-            auto start = chrono::high_resolution_clock::now();
-            subgraphs_LocalSearch = LocalSearch(graph_LocalSearch, subgraphs_Const);
+        // Reset the graph and rebuild it with a new number of vertices N
+        graph_LocalSearch.resetAndRebuild(N, probEdges);
+        cout << "ITERATION " << iteration_local << " - " << N << " points - ";
+        // Applique l'heuristique constructive au graphe
+        subgraphs_Const = ConstructiveHeuristic(graph_LocalSearch);
+
+        // start of the execution time
+        auto startLocal = chrono::high_resolution_clock::now();
+        subgraphs_LocalSearch = LocalSearch(graph_LocalSearch, subgraphs_Const);
 // We put the result of the local search algorithm in a var because we need it to compute the number of common edges for the output file
-#ifdef TEST_LOCAL_CSV
-            cout << "LOCAL - ";
-#endif
-            // end of the execution time
-            auto end = chrono::high_resolution_clock::now();
-            std::chrono::duration<double> temps_execution_local = end - start;
-#ifdef TEST_LOCAL_CSV
-            cout << "Time taken by function: " << temps_execution_local.count() << " seconds - " ;
-#endif
+
+        cout << "LOCAL - ";
+
+        // end of the execution time
+        auto endLocal = chrono::high_resolution_clock::now();
+        int temps_execution_local = std::chrono::duration_cast<chrono::microseconds>(endLocal - startLocal).count();
+
+        cout << "Time taken by function: " << temps_execution_local << " microseconds - " ;
+
         // write the number of vertices and the execution time in the csv file
-        outputFileLocal << N << ", " << temps_execution_local.count() << endl;
-#ifdef TEST_LOCAL_CSV
+        outputFileLocal << N << ", " << temps_execution_local << endl;
+
         cout << "FIN" << endl;
-#endif
 
 /* Writing the result in the output file */
 #ifdef OUTPUT
@@ -404,9 +359,7 @@ int main(int argc, char *argv[]) {
         // Write the result to the output file
         std::string filename_local = "test" + std::to_string(local_count) + "_local_search.out";
         WriteToFile(directory_local, filename_local, subgraphs_LocalSearch[0], subgraphs_LocalSearch[1], commonEdges_LocalSearch);
-#endif
 
-#ifdef TEST_LOCAL_OUTPUT
         // print the result expected in the output file
         // FIRST LINE : number of common edges between the two subgraphs
         cout << subgraphs_LocalSearch[0].size()+subgraphs_LocalSearch[1].size() << " " << commonEdges_LocalSearch << endl;
@@ -486,12 +439,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Write the header of the csv file
-    outputFileExactALL << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileLocalALL << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileConstructiveALL << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileTabuALL << "Nombre de points, Temps d'exécution (s)" << endl;
-
     int iteration_ALL = 1;
 
     cout << "------------------------------------------------" << endl;
@@ -514,12 +461,12 @@ int main(int argc, char *argv[]) {
 
         //Stop the chrono
         auto endExact = chrono::high_resolution_clock::now();
-        std::chrono::duration<double> temps_execution_Exact = endExact - startExact;
+        int temps_execution_exact = std::chrono::duration_cast<chrono::microseconds>(endExact - startExact).count();
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
-        cout << "Time taken by function: " << temps_execution_Exact.count() << " seconds " ;
+        cout << "Time taken by function: " << temps_execution_exact << " microseconds " ;
         // Write the informations in the CSV file
-        outputFileExact << N << ", " << temps_execution_Exact.count() << endl;
+        outputFileExact << N << ", " << temps_execution_exact << endl;
         */
 
         /*----------CONSTRUCTIVE----------*/
@@ -529,10 +476,10 @@ int main(int argc, char *argv[]) {
         subgraphs_ConstructiveALL = ConstructiveHeuristic(graphAll);
         //Stop the chrono
         auto endConstructive = chrono::high_resolution_clock::now();
-        std::chrono::duration<double> temps_execution_Constructive = endConstructive - startConstructive;
+        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(end - start).count();
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
-        cout << "Time taken by function: " << temps_execution_Constructive.count() << " seconds " ;
+        cout << "Time taken by function: " << temps_execution_Constructive.count() << " microseconds " ;
         // Write the informations in the CSV file
         outputFileConstructive << N << ", " << temps_execution_Constructive.count() << endl;
 
@@ -543,12 +490,12 @@ int main(int argc, char *argv[]) {
         subgraphs_LocalSearchALL = LocalSearch(graphAll, subgraphs_ConstructiveALL);
         //Stop the chrono
         auto endLocal = chrono::high_resolution_clock::now();
-        std::chrono::duration<double> temps_execution_Local = endLocal - startLocal;
+        int temps_execution_local = std::chrono::duration_cast<chrono::microseconds>(endLocal - startLocal).count();
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - LOCAL - ";
-        cout << "Time taken by function: " << temps_execution_Local.count() << " seconds " ;
+        cout << "Time taken by function: " << temps_execution_local << " microseconds " ;
         // Write the informations in the CSV file
-        outputFileLocal << N << ", " << temps_execution_Local.count() << endl;
+        outputFileLocal << N << ", " << temps_execution_local << endl;
 
         /*----------TABU-SEARCH----------*/
 
