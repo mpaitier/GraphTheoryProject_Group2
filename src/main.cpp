@@ -13,13 +13,13 @@
 
 /* --------- ALGORITHM CHOICE --------- */
 //#define EXACT
-//#define CONSTRUCTIVE
-//#define LOCAL
+#define CONSTRUCTIVE
+#define LOCAL
 //#define TABU
 
 #define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
-//#define OUTPUT
+#define OUTPUT
 /* --------- PRINT TEST --------- */
 //#define TEST_EXACT_CSV
 //#define TEST_CONSTRUCTIVE_CSV
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]) {
         // Directory to save the file
         std::string directory_local = "../instances/constructive/";
         // Write the result to the output file
-        std::string filename_local = "test" + std::to_string(local_count) + "_constructive.out";
+        std::string filename_local = "test" + std::to_string(constructive_count) + "_constructive.out";
         WriteToFile(directory_local, filename_local, subgraphs_Constructive[0], subgraphs_Constructive[1], commonEdges_Constructive);
 #endif
 
@@ -420,45 +420,45 @@ int main(int argc, char *argv[]) {
     //Creat the graph for all tests
     GraphAdjacencyList graphAll(0);
     // Initialize the subgraphs
-    vector<vector<int>> subgraphs_Exact;
-    vector<vector<int>> subgraphs_Constructive;
-    vector<vector<int>> subgraphs_LocalSearch;
-    vector<vector<int>> subgraphs_TabuSearch;
+    vector<vector<int>> subgraphs_ExactALL;
+    vector<vector<int>> subgraphs_ConstructiveALL;
+    vector<vector<int>> subgraphs_LocalSearchALL;
+    vector<vector<int>> subgraphs_TabuSearchALL;
 
 /* PARAMETERS FOR THE CSV FILE */
     //Create csv files
-    const string outputFileNameExact = "../instances/exact/execution_times_Exact-ALL.csv";
-    const string outputFileNameConstructive = "../instances/constructive/execution_times_Constructive-ALL.csv";
-    const string outputFileNameLocal = "../instances/local_search/execution_times_LocalSearch-ALL.csv";
-    const string outputFileNameTabu = "../instances/tabu_search/execution_times_Tabu-ALL.csv";
+    const string outputFileNameExactALL = "../instances/exact/execution_times_Exact-ALL.csv";
+    const string outputFileNameConstructiveALL = "../instances/constructive/execution_times_Constructive-ALL.csv";
+    const string outputFileNameLocalALL = "../instances/local_search/execution_times_LocalSearch-ALL.csv";
+    const string outputFileNameTabuALL = "../instances/tabu_search/execution_times_Tabu-ALL.csv";
 
     // Open all files to write in
-    ofstream outputFileExact(outputFileNameExact);
-    if (!outputFileExact.is_open()) {
+    ofstream outputFileExactALL(outputFileNameExactALL);
+    if (!outputFileExactALL.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier Exact CSV pour l'écriture." << endl;
         return 1;
     }
-    ofstream outputFileLocal(outputFileNameLocal);
-    if (!outputFileLocal.is_open()) {
+    ofstream outputFileLocalALL(outputFileNameLocalALL);
+    if (!outputFileLocalALL.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier Local Search CSV pour l'écriture." << endl;
         return 1;
     }
-    ofstream outputFileConstructive(outputFileNameConstructive);
-    if (!outputFileConstructive.is_open()) {
+    ofstream outputFileConstructiveALL(outputFileNameConstructiveALL);
+    if (!outputFileConstructiveALL.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier Constructive CSV pour l'écriture." << endl;
         return 1;
     }
-    ofstream outputFileTabu(outputFileNameTabu);
-    if (!outputFileTabu.is_open()) {
+    ofstream outputFileTabuALL(outputFileNameTabuALL);
+    if (!outputFileTabuALL.is_open()) {
         cerr << "Erreur : Impossible d'ouvrir le fichier Tabu Search CSV pour l'écriture." << endl;
         return 1;
     }
 
     // Write the header of the csv file
-    outputFileExact << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileLocal << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileConstructive << "Nombre de points, Temps d'exécution (s)" << endl;
-    outputFileTabu << "Nombre de points, Temps d'exécution (s)" << endl;
+    outputFileExactALL << "Nombre de points, Temps d'exécution (s)" << endl;
+    outputFileLocalALL << "Nombre de points, Temps d'exécution (s)" << endl;
+    outputFileConstructiveALL << "Nombre de points, Temps d'exécution (s)" << endl;
+    outputFileTabuALL << "Nombre de points, Temps d'exécution (s)" << endl;
 
     int iteration_ALL = 1;
 
@@ -494,7 +494,7 @@ int main(int argc, char *argv[]) {
         //Start the chrono
         auto startConstructive = chrono::high_resolution_clock::now();
         //Execute the function
-        subgraphs_Constructive = ConstructiveHeuristic(graphAll);
+        subgraphs_ConstructiveALL = ConstructiveHeuristic(graphAll);
         //Stop the chrono
         auto endConstructive = chrono::high_resolution_clock::now();
         std::chrono::duration<double> temps_execution_Constructive = endConstructive - startConstructive;
@@ -508,7 +508,7 @@ int main(int argc, char *argv[]) {
         //Start the chrono
         auto startLocal = chrono::high_resolution_clock::now();
         //Execute the function
-        subgraphs_LocalSearch = LocalSearch(graphAll, subgraphs_Constructive);
+        subgraphs_LocalSearchALL = LocalSearch(graphAll, subgraphs_ConstructiveALL);
         //Stop the chrono
         auto endLocal = chrono::high_resolution_clock::now();
         std::chrono::duration<double> temps_execution_Local = endLocal - startLocal;
