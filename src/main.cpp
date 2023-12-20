@@ -13,11 +13,11 @@
 
 /* --------- ALGORITHM CHOICE --------- */
 //#define EXACT
-#define CONSTRUCTIVE
-#define LOCAL
+//#define CONSTRUCTIVE
+//#define LOCAL
 //#define TABU
 
-//#define ALL
+#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
 /* --------- PRINT TEST --------- */
@@ -505,12 +505,10 @@ int main(int argc, char *argv[]) {
         outputFileConstructive << N << ", " << temps_execution_Constructive.count() << endl;
 
         /*----------LOCAL-SEARCH----------*/
-        // Applique l'heuristique constructive au graphe
-        subgraphs_Const = ConstructiveHeuristic(graphAll);
         //Start the chrono
         auto startLocal = chrono::high_resolution_clock::now();
         //Execute the function
-        subgraphs_LocalSearch = LocalSearch(graphAll, subgraphs_Const);
+        subgraphs_LocalSearch = LocalSearch(graphAll, subgraphs_Constructive);
         //Stop the chrono
         auto endLocal = chrono::high_resolution_clock::now();
         std::chrono::duration<double> temps_execution_Local = endLocal - startLocal;
