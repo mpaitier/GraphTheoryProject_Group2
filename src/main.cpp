@@ -14,13 +14,10 @@
 /* --------- ALGORITHM CHOICE --------- */
 //#define EXACT
 //#define CONSTRUCTIVE
-#define LOCAL
+//#define LOCAL
 //#define TABU
 
-//#define ALL
-
-/* --------- INPUT ? --------- */
-//#define INPUT
+#define ALL
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
 
@@ -33,49 +30,77 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-    int N;
     int step = 2;
-    int N_base = 10;            // number of vertices at the beginning
-    int probEdges = 25;         // probability of having an edge between two vertices
-    int maxIterations = 200;    // maximum number of iterations for every algorithm
+    int N;
+    int N_base = 4;            // number of vertices at the beginning
+    int probEdges = 75;         // probability of having an edge between two vertices
+    int maxIterations = 20;    // maximum number of iterations for every algorithm
 
-#ifdef INPUT
-    // ------------------------------------------------
-    // Create input file using the random graph
-    // ----------------------------------------------
+/*
+    // ----------------------------------------------------------------
+    // Récupérer les données du fichier input
+    // ----------------------------------------------------------------
+    // int nbVertices : nombre de sommets
+    // int nbEdges : nombre d'arêtes
+    // vector<int> edges : vecteur d'entiers correspondant aux arêtes
+    // ----------------------------------------------------------------
+    
+    ifstream input_file("../instances/filename.in");
 
-    // Count the number of input files in the directory
-    int count = CountOutFilesInDirectory("../instances/new_instances");
-    // Directory to save the file
-    std::string directory_instancesIN = "../instances/new_instances/";
-    // Name of the file
-    std::string filename_instancesIN = "test" + std::to_string(count) + ".in";
-    // Open file in writing mode
-    ofstream inFile(directory_instancesIN + "/"+ filename_instancesIN);
+    int nbVertices;
+    int nbEdges;
+    vector<int> edges = {};
+    
+    if(input_file)
+    {
+        string ligne;
+        input_file.seekg(0, ios::beg);
 
-    // Créer aléatoirement des instances dans les fichiers in
+        input_file >> nbVertices;
+        input_file >> nbEdges;
+
+        vector<int> edges;
+
+        for (int i = 0; i < nbEdges*2; ++i) {
+            int elem;
+            input_file >> elem;
+            edges.push_back(elem);
+        }
+    }
+    else
+    {
+        cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
+    }
+    input_file.close();
+
+    // Création d'un graphe à partir des valeurs d'un fichier input
+    GraphAdjacencyList graph(nbVertices);
+    int i = 0;
+    while(i < nbEdges*2) {
+        graph.addEdge(edges[i], edges[i+1]);
+        i = i + 2;
+    }
+    
+*/
+
+/*
+    //Crée un graph de manière aléatoire avec maximum 20 sommets
     srand(time(NULL));
-    int numVertices = rand()%200+1;  // number of vertices (max = 200)
-
-    if(numVertices%2 !=0){      // check that there is an even number of vertices
+    int numVertices = rand()%20+1;
+    if(numVertices%2 !=0){      //verifier nombre de sommets paire
         numVertices = numVertices + 1;
     }
     GraphAdjacencyList graph(numVertices);
-    int edges = (numVertices*(numVertices-1))/2;    // max number of possible edges
-
-    vector<int> line2; // vecteur d'entiers pour l'écriture de la 2e ligne du fichier
-
+    int edges = (numVertices*(numVertices-1))/2;
     int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
-    int numEdges = 0;   // number of existing edges
+    int numEdges = 0;
     for(int i=0; i<numEdgesMax; i++){
         int randomVertex1 = rand() %numVertices;
         int randomVertex2 = rand() %numVertices;
         if(randomVertex1 != randomVertex2){
             if(graph.adjacencyList[randomVertex1].empty()){
-                graph.addEdge(randomVertex1, randomVertex2); // edge between randomVertex1 and randomVertex2
+                graph.addEdge(randomVertex1, randomVertex2);
                 numEdges ++;
-                line2.push_back(randomVertex1); // add edge to line2
-                line2.push_back(randomVertex2); //
             }
             else{
                 bool valid = true;
@@ -85,27 +110,33 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if(valid){
-                    graph.addEdge(randomVertex1, randomVertex2); // edge between randomVertex1 and randomVertex2
+                    graph.addEdge(randomVertex1, randomVertex2);
                     numEdges ++;
-                    line2.push_back(randomVertex1); // add edge to line2
-                    line2.push_back(randomVertex2); //
                 }
             }
         }
     }
+*/
+    /*
+    GraphAdjacencyList graph(6);
+    graph.addEdge(0,3);
+    graph.addEdge(0,2);
+    graph.addEdge(0,1);
+    graph.addEdge(0,4);
+    graph.addEdge(2,5);
+    graph.addEdge(4,2);*/
 
-    inFile << numVertices << " " << numEdges << endl;  // write 1st line of the input file
-    //affiche_vector(line2);
-    // Write 2nd line of the input file
-    for (int i = 0; i < numEdges * 2; ++i) {
-        inFile << line2[i];
-        if (i % 2 == 0)
-            inFile << " ";
-        else
-            inFile << "  ";
-    }
-
-#endif
+//    cout << "Nombre de sommet : " << graph.V << endl;
+//    cout << "Nombre d'arretes maximum : " << numEdgesMax << endl;
+//    cout << "Nombre d'arretes : " << numEdges << endl;
+//    graph.printGraph();
+//
+//    vector<int> tabDegrees = graph.allDegrees();
+//    cout << "Tableau degres : [";
+//    for(const int &elem : tabDegrees){
+//        cout << elem << " ";
+//    }
+//    cout << "]" << endl;
 
 /* --------------------------------------------------------------------------- */
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Exact \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
@@ -452,7 +483,7 @@ int main(int argc, char *argv[]) {
         // write the number of vertices and the execution time in the csv file
         outputFileTabu << N << ", " << temps_execution_tabu << endl;
 
-        commonEdges_TabuSearch = calculEdgeCommun(graph_LocalSearch,subgraphs_TabuSearch);
+        commonEdges_TabuSearch = calculEdgeCommun(graph_TabuSearch,subgraphs_TabuSearch);
 
         cout << commonEdges_TabuSearch << " - FIN" << endl;
 
@@ -515,6 +546,10 @@ int main(int argc, char *argv[]) {
     const string outputFileNameConstructiveALL = "../instances/constructive/execution_times_Constructive-ALL.csv";
     const string outputFileNameLocalALL = "../instances/local_search/execution_times_LocalSearch-ALL.csv";
     const string outputFileNameTabuALL = "../instances/tabu_search/execution_times_Tabu-ALL.csv";
+    const string outputEdgesFileNameExactALL = "../instances/exact/edges_Exact-ALL.csv";
+    const string outputEdgesFileNameConstructiveALL = "../instances/constructive/edges_Constructive-ALL.csv";
+    const string outputEdgesFileNameLocalALL = "../instances/local_search/edges_LocalSearch-ALL.csv";
+    const string outputEdgesFileNameTabuALL = "../instances/tabu_search/edges_Tabu-ALL.csv";
 
     // Open all files to write in
     ofstream outputFileExactALL(outputFileNameExactALL);
@@ -537,6 +572,26 @@ int main(int argc, char *argv[]) {
         cerr << "Erreur : Impossible d'ouvrir le fichier Tabu Search CSV pour l'écriture." << endl;
         return 1;
     }
+    ofstream outputEdgesFileExactALL(outputEdgesFileNameExactALL);
+    if (!outputEdgesFileExactALL.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier Exact CSV pour l'écriture." << endl;
+        return 1;
+    }
+    ofstream outputEdgesFileLocalALL(outputEdgesFileNameLocalALL);
+    if (!outputEdgesFileLocalALL.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier Local Search CSV pour l'écriture." << endl;
+        return 1;
+    }
+    ofstream outputEdgesFileConstructiveALL(outputEdgesFileNameConstructiveALL);
+    if (!outputEdgesFileConstructiveALL.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier Constructive CSV pour l'écriture." << endl;
+        return 1;
+    }
+    ofstream outputEdgesFileTabuALL(outputEdgesFileNameTabuALL);
+    if (!outputEdgesFileTabuALL.is_open()) {
+        cerr << "Erreur : Impossible d'ouvrir le fichier Tabu Search CSV pour l'écriture." << endl;
+        return 1;
+    }
 
     int iteration_ALL = 1;
 
@@ -546,7 +601,7 @@ int main(int argc, char *argv[]) {
         graphAll.resetAndRebuild(N, probEdges);
 
         /*----------EXACT----------*/
-        /*
+
         //Start the chrono
         auto startExact = chrono::high_resolution_clock::now();
         //Execute the function
@@ -556,17 +611,20 @@ int main(int argc, char *argv[]) {
         }
         int min_cut_exact = numeric_limits<int>::max();
         vector<int> best = {};
-        subgraphs_Exact =
+        subgraphs_ExactALL = Exact_Main(graphAll);
 
         //Stop the chrono
         auto endExact = chrono::high_resolution_clock::now();
         int temps_execution_exact = std::chrono::duration_cast<chrono::microseconds>(endExact - startExact).count();
 
-        cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
+        cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - EXACT - ";
         cout << "Time taken by function: " << temps_execution_exact << " microseconds " ;
+        auto edgesExact = calculEdgeCommun(graphAll,subgraphs_ExactALL);
+        cout << " - " << edgesExact << " edges" << endl;
         // Write the informations in the CSV file
-        outputFileExact << N << ", " << temps_execution_exact << endl;
-        */
+        outputFileExactALL << N << ", " << temps_execution_exact << endl;
+        outputEdgesFileExactALL << N << ", " << edgesExact << endl;
+
 
         /*----------CONSTRUCTIVE----------*/
         //Start the chrono
@@ -579,8 +637,12 @@ int main(int argc, char *argv[]) {
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
         cout << "Time taken by function: " << temps_execution_constructive << " microseconds " ;
+        auto edgesConstructive = calculEdgeCommun(graphAll,subgraphs_ConstructiveALL);
+        cout << " - " << edgesConstructive << " edges" << endl;
         // Write the informations in the CSV file
         outputFileConstructiveALL << N << ", " << temps_execution_constructive << endl;
+        outputEdgesFileConstructiveALL << N << ", " << edgesConstructive << endl;
+
 
         /*----------LOCAL-SEARCH----------*/
         //Start the chrono
@@ -598,6 +660,8 @@ int main(int argc, char *argv[]) {
         cout << " - " << edgesLocal << " edges" << endl;
         // Write the informations in the CSV file
         outputFileLocalALL << N << ", " << temps_execution_local << endl;
+        outputEdgesFileLocalALL << N << ", " << edgesLocal << endl;
+
 
         /*----------TABU-SEARCH----------*/
         //Start the chrono
@@ -615,11 +679,12 @@ int main(int argc, char *argv[]) {
         cout << " - " << edgesTabu << " edges" << endl;
         // Write the informations in the CSV file
         outputFileTabuALL << N << ", " << temps_execution_tabu << endl;
+        outputEdgesFileTabuALL << N << ", " << edgesTabu << endl;
 
 
         /*----------PARAMETERS----------*/
         iteration_ALL++;
-        N += 2;
+        N += step;
     }
 #endif
 
