@@ -64,3 +64,29 @@ void ExactAlgorithm(GraphAdjacencyList G, vector<int> vertices, int& min_cut, ve
     }
     return;
 }
+
+
+vector<vector<int>> Exact_Main(GraphAdjacencyList G){
+
+    vector<vector<int>> res = {};
+
+    vector<int> vertices = {};
+    for (int i = 0; i < G.V; ++i) {
+        vertices.push_back(i);
+    }
+
+    int min_cut = numeric_limits<int>::max();
+    vector<int> best = {};
+
+    //int index = -1;
+    //vector<int> curr = {};
+
+    ExactAlgorithm(G, vertices, min_cut, best);
+
+    vector<int> subgraph2 = deduire_subgraph2(vertices, best);
+
+    res.push_back(best);
+    res.push_back(subgraph2);
+
+    return res;
+}
