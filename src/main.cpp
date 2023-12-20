@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     int step = 2;
     int N;
     int N_base = 6;            // number of vertices at the beginning
-    int probEdges = 75;         // probability of having an edge between two vertices
+    int probEdges = 25;         // probability of having an edge between two vertices
     int maxIterations = 100;    // maximum number of iterations for every algorithm
 
 /*
@@ -606,12 +606,12 @@ int main(int argc, char *argv[]) {
         subgraphs_ConstructiveALL = ConstructiveHeuristic(graphAll);
         //Stop the chrono
         auto endConstructive = chrono::high_resolution_clock::now();
-        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(end - start).count();
+        int temps_execution_constructive = std::chrono::duration_cast<chrono::microseconds>(endConstructive - startConstructive).count();
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - CONSTRUCTIVE - ";
-        cout << "Time taken by function: " << temps_execution_Constructive.count() << " microseconds " ;
+        cout << "Time taken by function: " << temps_execution_constructive << " microseconds " ;
         // Write the informations in the CSV file
-        outputFileConstructive << N << ", " << temps_execution_Constructive.count() << endl;
+        outputFileConstructiveALL << N << ", " << temps_execution_constructive << endl;
 
         /*----------LOCAL-SEARCH----------*/
         //Start the chrono
@@ -624,10 +624,29 @@ int main(int argc, char *argv[]) {
 
         cout << endl << "ITERATION " << iteration_ALL << " - " << N << " points - LOCAL - ";
         cout << "Time taken by function: " << temps_execution_local << " microseconds " ;
+
+        auto edgesLocal = calculEdgeCommun(graphAll,subgraphs_LocalSearchALL);
+        cout << " - " << edgesLocal << " edges" << endl;
         // Write the informations in the CSV file
-        outputFileLocal << N << ", " << temps_execution_local << endl;
+        outputFileLocalALL << N << ", " << temps_execution_local << endl;
 
         /*----------TABU-SEARCH----------*/
+        //Start the chrono
+        auto startTabu = chrono::high_resolution_clock::now();
+        //Execute the function
+        subgraphs_TabuSearchALL = TabuSearch(graphAll);
+        //Stop the chrono
+        auto endTabu = chrono::high_resolution_clock::now();
+        int temps_execution_tabu = std::chrono::duration_cast<chrono::microseconds>(endTabu - startTabu).count();
+
+        cout << "ITERATION " << iteration_ALL << " - " << N << " points - TABU - ";
+        cout << "Time taken by function: " << temps_execution_tabu << " microseconds " ;
+
+        auto edgesTabu = calculEdgeCommun(graphAll,subgraphs_TabuSearchALL);
+        cout << " - " << edgesTabu << " edges" << endl;
+        // Write the informations in the CSV file
+        outputFileTabuALL << N << ", " << temps_execution_tabu << endl;
+
 
         /*----------PARAMETERS----------*/
         iteration_ALL++;

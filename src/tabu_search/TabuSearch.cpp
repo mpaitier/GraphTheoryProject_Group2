@@ -30,7 +30,7 @@ vector<vector<int>> TabuSearch(GraphAdjacencyList &graph) {
     vector<vector<int>> TabuList;
 
     // while the break conditions are not satisfied, we continue the tabu search
-    while( i < Max_Fail & j < Max_Try) {
+    while( i < Max_Fail && j < Max_Try) {
 
         currentSolution = bestSolution;
 
@@ -56,12 +56,13 @@ vector<vector<int>> TabuSearch(GraphAdjacencyList &graph) {
             TabuList.push_back(Pair2);
 
             // update the current solution
-            currentSolution = LocalSearch(graph, currentSolution);
+            auto newCurrentSolution = LocalSearch(graph, currentSolution);
 
 
-            if(calculEdgeCommun(graph, currentSolution) < calculEdgeCommun(graph, bestSolution)){
+            if(calculEdgeCommun(graph, newCurrentSolution) < calculEdgeCommun(graph, bestSolution)){
+
                 // if the current solution is better than the best solution, then we update the best solution
-                bestSolution = currentSolution;
+                bestSolution = newCurrentSolution;
 
                 // success found, so we reset the number of try until success
                 i = 0;
