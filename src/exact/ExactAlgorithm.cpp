@@ -78,9 +78,6 @@ vector<vector<int>> Exact_Main(GraphAdjacencyList G){
     int min_cut = numeric_limits<int>::max();
     vector<int> best = {};
 
-    //int index = -1;
-    //vector<int> curr = {};
-
     ExactAlgorithm(G, vertices, min_cut, best);
 
     vector<int> subgraph2 = deduire_subgraph2(vertices, best);

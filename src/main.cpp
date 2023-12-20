@@ -195,6 +195,12 @@ int main(int argc, char *argv[]) {
         auto endExact = chrono::high_resolution_clock::now();
         int temps_execution_exact = std::chrono::duration_cast<chrono::microseconds>(endExact - startExact).count();
 
+        cout << "Time taken by function: " << temps_execution_exact << " microseconds - " ;
+
+        // write the number of vertices and the execution time in the csv file
+        outputFileExact << N << ", " << temps_execution_exact << endl;
+
+        cout << "FIN" << endl;
 
 /* Writing the result in the output file */
 #ifdef OUTPUT
