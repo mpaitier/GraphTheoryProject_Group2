@@ -16,12 +16,15 @@
 //#define CONSTRUCTIVE
 //#define LOCAL
 //#define TABU
-
 //#define ALL
-/* --------- CREATE INPUT FILE ? --------- */
-#define ALL_WITH_IN_FILES
-/* --------- CREATE OUTPUT FILE ? --------- */
+/* --------- CREATE OUTPUT FILE FROM ALGORITHM --------- */
 //#define OUTPUT
+/* --------- CREATE OUTPUT FILE FROM INPUT FILE ? --------- */
+//#define EXACT_WITH_IN_FILES
+//#define CONSTRUCTIVE_WITH_IN_FILES
+//#define LOCAL_WITH_IN_FILES
+//#define TABU_WITH_IN_FILES
+
 
 
 int main(int argc, char *argv[]) {
@@ -589,13 +592,17 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-#ifdef ALL_WITH_IN_FILES
-/*----------FILE IN (CHOOSE ON TO EXECUTE)----------*/
-    //string file = "../instances/new_instances/test1.in";
-    //string fileNameIn = "test1";
-    string file = "../instances/new_instances/test2.in";
-    string fileNameIn = "test2";
+/* ----------------------------------------------------------------------------------- */
+/* <-_-_-_-_-_-_-_-_-_-_-_-_-// All algorithm with in files \\-_-_-_-_-_-_-_-_-_-_-_-_-> */
+/* ----------------------------------------------------------------------------------- */
 
+
+
+/*----------FILE IN (CHOOSE ON TO EXECUTE)----------*/
+    string file = "../instances/new_instances/test20_25.in";
+    string fileNameIn = "test20_25";
+
+#ifdef EXACT_WITH_IN_FILES
 /*----------EXACT----------*/
     /* PARAMETERS FOR THE ALGORTIHM */
     // Initialize the graph
@@ -604,7 +611,6 @@ int main(int argc, char *argv[]) {
     vector<vector<int>> subgraphs_Exact_In;
     //Rebuild the graph
     graph_Exact_In.rebuildWithInFile(file);
-    graph_Exact_In.printGraph();
     //Execute the algorithm
     subgraphs_Exact_In = Exact_Main(graph_Exact_In);
 
@@ -637,7 +643,9 @@ int main(int argc, char *argv[]) {
         cout << element << " ";
     }
     cout << endl;
+#endif
 
+#ifdef CONSTRUCTIVE_WITH_IN_FILES
 /*----------CONSTRUCTIVE-HEURISTIC----------*/
     /* PARAMETERS FOR THE ALGORTIHM */
     // Initialize the graph
@@ -678,7 +686,9 @@ int main(int argc, char *argv[]) {
         cout << element << " ";
     }
     cout << endl;
+#endif
 
+#ifdef LOCAL_WITH_IN_FILES
 /*----------LOCAL-SEARCH----------*/
     /* PARAMETERS FOR THE ALGORTIHM */
     // Initialize the graph
@@ -721,7 +731,9 @@ int main(int argc, char *argv[]) {
         cout << element << " ";
     }
     cout << endl;
+#endif
 
+#ifdef TABU_WITH_IN_FILES
 /*----------TABU-SEARCH----------*/
     /* PARAMETERS FOR THE ALGORTIHM */
     // Initialize the graph
@@ -762,7 +774,6 @@ int main(int argc, char *argv[]) {
         cout << element << " ";
     }
     cout << endl;
-
 #endif
 
     cout << endl << " END OF THE PROGRAM, THANKS FOR USING IT ! :D " << endl;
