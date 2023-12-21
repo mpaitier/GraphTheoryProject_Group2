@@ -7,6 +7,8 @@ This README provides an overview of the project structure and execution process.
 ### 1. instances
 This folder contains CSV files representing the temporal complexity of each algorithm. The "ALL" suffix indicates results when all algorithms operate on the same graph. Additionally, this directory contains input and output files for instances.
 
+The input files are in the folder /instances/new_instances. The files test1.in and test2.in are the graphs from the subject. The files testX_Y.in are graphs created with X vertices and a probability of having an edge of Y%.
+
 ### 2. report
 The "report" folder contains the PDF document detailing the project report.
 
