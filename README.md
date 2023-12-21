@@ -42,4 +42,4 @@ To enable input and/or output file creation, uncomment the relevant `#define` st
 4. Save the changes.
 5. Compile and run the program.
 
-Note: Exercise caution when enabling file creation, especially for input and output files, it will create many files.
+Note: Exercise caution when enabling file creation, especially for output files, it will create many files.
