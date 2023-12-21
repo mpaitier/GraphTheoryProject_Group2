@@ -22,6 +22,7 @@ public:
     /* <------# Methods #------> */
 
     void resetAndRebuild(int vertices, int probEdges); // reset the graph and rebuild it with a new number of vertices
+    void rebuildWithInFile(const string fileName); // rebuild the graph with an in file
     void addEdge(int v, int w); // add an edge between the vertices v and w
     bool isEdge(int v, int w); // check if there is an edge between the vertices v and w
 

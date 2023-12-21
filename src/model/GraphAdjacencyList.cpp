@@ -31,6 +31,36 @@ void GraphAdjacencyList::resetAndRebuild(int vertices, int probEdges) {
     }
 }
 
+void GraphAdjacencyList::rebuildWithInFile(const string fileName) {
+/*
+ * INPUT : an in file with the number of vertices and edges follow by all the edges
+ * OUTPUT : none
+ * FUNCTION : reset the graph and rebuild it with the csv information
+ */
+    ifstream file(fileName);
+    if(!file.is_open()){
+        std::cerr << "Error: Cannot open file for writing." << std::endl;
+        return;
+    }
+
+    // Reading of the first line
+    int numberVertices, numberEdges;
+    file >> numberVertices >> numberEdges;
+    //Add the number of vertices in the struct of the graph
+    V = numberVertices;
+    adjacencyList.resize(numberVertices);
+
+    //reading the second line
+    //vector<vector<int>> allEdges;
+    int edge1, edge2;
+    for(int i=0; i<numberEdges; i++){
+        file >> edge1 >> edge2;
+        //allEdges.push_back({edge1,edge2});
+        addEdge(edge1, edge2);
+    }
+
+    file.close();
+}
 
 void GraphAdjacencyList::addEdge(int v, int w) {
 /*

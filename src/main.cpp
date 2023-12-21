@@ -17,7 +17,9 @@
 //#define LOCAL
 //#define TABU
 
-#define ALL
+//#define ALL
+/* --------- CREATE INPUT FILE ? --------- */
+#define ALL_WITH_IN_FILES
 /* --------- CREATE OUTPUT FILE ? --------- */
 //#define OUTPUT
 
@@ -36,107 +38,6 @@ int main(int argc, char *argv[]) {
     int probEdges = 75;         // probability of having an edge between two vertices
     int maxIterations = 20;    // maximum number of iterations for every algorithm
 
-/*
-    // ----------------------------------------------------------------
-    // Récupérer les données du fichier input
-    // ----------------------------------------------------------------
-    // int nbVertices : nombre de sommets
-    // int nbEdges : nombre d'arêtes
-    // vector<int> edges : vecteur d'entiers correspondant aux arêtes
-    // ----------------------------------------------------------------
-    
-    ifstream input_file("../instances/filename.in");
-
-    int nbVertices;
-    int nbEdges;
-    vector<int> edges = {};
-    
-    if(input_file)
-    {
-        string ligne;
-        input_file.seekg(0, ios::beg);
-
-        input_file >> nbVertices;
-        input_file >> nbEdges;
-
-        vector<int> edges;
-
-        for (int i = 0; i < nbEdges*2; ++i) {
-            int elem;
-            input_file >> elem;
-            edges.push_back(elem);
-        }
-    }
-    else
-    {
-        cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
-    }
-    input_file.close();
-
-    // Création d'un graphe à partir des valeurs d'un fichier input
-    GraphAdjacencyList graph(nbVertices);
-    int i = 0;
-    while(i < nbEdges*2) {
-        graph.addEdge(edges[i], edges[i+1]);
-        i = i + 2;
-    }
-    
-*/
-
-/*
-    //Crée un graph de manière aléatoire avec maximum 20 sommets
-    srand(time(NULL));
-    int numVertices = rand()%20+1;
-    if(numVertices%2 !=0){      //verifier nombre de sommets paire
-        numVertices = numVertices + 1;
-    }
-    GraphAdjacencyList graph(numVertices);
-    int edges = (numVertices*(numVertices-1))/2;
-    int numEdgesMax = (rand() % (edges - (edges/2) + 1)) + (edges/2);
-    int numEdges = 0;
-    for(int i=0; i<numEdgesMax; i++){
-        int randomVertex1 = rand() %numVertices;
-        int randomVertex2 = rand() %numVertices;
-        if(randomVertex1 != randomVertex2){
-            if(graph.adjacencyList[randomVertex1].empty()){
-                graph.addEdge(randomVertex1, randomVertex2);
-                numEdges ++;
-            }
-            else{
-                bool valid = true;
-                for(const int &neighbor : graph.adjacencyList[randomVertex1]){
-                    if(neighbor == randomVertex2){
-                        valid = false;
-                    }
-                }
-                if(valid){
-                    graph.addEdge(randomVertex1, randomVertex2);
-                    numEdges ++;
-                }
-            }
-        }
-    }
-*/
-    /*
-    GraphAdjacencyList graph(6);
-    graph.addEdge(0,3);
-    graph.addEdge(0,2);
-    graph.addEdge(0,1);
-    graph.addEdge(0,4);
-    graph.addEdge(2,5);
-    graph.addEdge(4,2);*/
-
-//    cout << "Nombre de sommet : " << graph.V << endl;
-//    cout << "Nombre d'arretes maximum : " << numEdgesMax << endl;
-//    cout << "Nombre d'arretes : " << numEdges << endl;
-//    graph.printGraph();
-//
-//    vector<int> tabDegrees = graph.allDegrees();
-//    cout << "Tableau degres : [";
-//    for(const int &elem : tabDegrees){
-//        cout << elem << " ";
-//    }
-//    cout << "]" << endl;
 
 /* --------------------------------------------------------------------------- */
 /* <-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-// Exact \\-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-> */
@@ -166,7 +67,7 @@ int main(int argc, char *argv[]) {
     // Open the file to write in
     ofstream outputFileExact(outputFileNameExact);
     if (!outputFileExact.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
 
@@ -259,7 +160,7 @@ int main(int argc, char *argv[]) {
     // Open the file to write in
     ofstream outputFileConstructive(outputFileNameConstructive);
     if (!outputFileConstructive.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
 
@@ -354,7 +255,7 @@ int main(int argc, char *argv[]) {
     // Open the file to write in
     ofstream outputFileLocal(outputFileNameLocal);
     if (!outputFileLocal.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
 
@@ -453,7 +354,7 @@ int main(int argc, char *argv[]) {
     // Open the file to write in
     ofstream outputFileTabu(outputFileNameTabu);
     if (!outputFileTabu.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
 
@@ -554,42 +455,42 @@ int main(int argc, char *argv[]) {
     // Open all files to write in
     ofstream outputFileExactALL(outputFileNameExactALL);
     if (!outputFileExactALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Exact CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputFileLocalALL(outputFileNameLocalALL);
     if (!outputFileLocalALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Local Search CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputFileConstructiveALL(outputFileNameConstructiveALL);
     if (!outputFileConstructiveALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Constructive CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputFileTabuALL(outputFileNameTabuALL);
     if (!outputFileTabuALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Tabu Search CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputEdgesFileExactALL(outputEdgesFileNameExactALL);
     if (!outputEdgesFileExactALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Exact CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputEdgesFileLocalALL(outputEdgesFileNameLocalALL);
     if (!outputEdgesFileLocalALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Local Search CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputEdgesFileConstructiveALL(outputEdgesFileNameConstructiveALL);
     if (!outputEdgesFileConstructiveALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Constructive CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
     ofstream outputEdgesFileTabuALL(outputEdgesFileNameTabuALL);
     if (!outputEdgesFileTabuALL.is_open()) {
-        cerr << "Erreur : Impossible d'ouvrir le fichier Tabu Search CSV pour l'écriture." << endl;
+        cerr << "Error: Cannot open CSV file for writing." << endl;
         return 1;
     }
 
@@ -686,6 +587,182 @@ int main(int argc, char *argv[]) {
         iteration_ALL++;
         N += step;
     }
+#endif
+
+#ifdef ALL_WITH_IN_FILES
+/*----------FILE IN (CHOOSE ON TO EXECUTE)----------*/
+    //string file = "../instances/new_instances/test1.in";
+    //string fileNameIn = "test1";
+    string file = "../instances/new_instances/test2.in";
+    string fileNameIn = "test2";
+
+/*----------EXACT----------*/
+    /* PARAMETERS FOR THE ALGORTIHM */
+    // Initialize the graph
+    GraphAdjacencyList graph_Exact_In(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_Exact_In;
+    //Rebuild the graph
+    graph_Exact_In.rebuildWithInFile(file);
+    graph_Exact_In.printGraph();
+    //Execute the algorithm
+    subgraphs_Exact_In = Exact_Main(graph_Exact_In);
+
+    /* PARAMETERS FOR THE FILE .out */
+    int commonEdges_Exact_in;
+
+    /* Writing the result in the output file */
+    // compute the number of common edges between the two subgraphs
+    commonEdges_Exact_in = calculEdgeCommun(graph_Exact_In, subgraphs_Exact_In);
+
+    // Directory to save the file
+    std::string directory_exact_in = "../instances/exact/";
+    // Write the result to the output file
+    std::string filename_exact_in = fileNameIn + "_exact.out";
+    WriteToFile(directory_exact_in, filename_exact_in, subgraphs_Exact_In[0], subgraphs_Exact_In[1], commonEdges_Exact_in);
+
+    // print the result expected in the output file
+    // FIRST LINE : number of common edges between the two subgraphs
+    cout << "------EXACT------" << endl;
+    cout << subgraphs_Exact_In[0].size()+subgraphs_Exact_In[1].size() << " " << commonEdges_Exact_in << endl;
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : subgraphs_Exact_In[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : subgraphs_Exact_In[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
+/*----------CONSTRUCTIVE-HEURISTIC----------*/
+    /* PARAMETERS FOR THE ALGORTIHM */
+    // Initialize the graph
+    GraphAdjacencyList graph_ConstructiveIn(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_Constructive_In;
+    //Rebuild the graph
+    graph_ConstructiveIn.rebuildWithInFile(file);
+    //Execute the algorithm
+    subgraphs_Constructive_In = ConstructiveHeuristic(graph_ConstructiveIn);
+
+    /* PARAMETERS FOR THE FILE .out */
+    int commonEdges_Constructive_in;
+
+    /* Writing the result in the output file */
+    // compute the number of common edges between the two subgraphs
+    commonEdges_Constructive_in = calculEdgeCommun(graph_ConstructiveIn,subgraphs_Constructive_In);
+
+    // Directory to save the file
+    std::string directory_constructive_in = "../instances/constructive/";
+    // Write the result to the output file
+    std::string filename_constructive_in = fileNameIn + "_constructive.out";
+    WriteToFile(directory_constructive_in, filename_constructive_in, subgraphs_Constructive_In[0], subgraphs_Constructive_In[1], commonEdges_Constructive_in);
+
+    // print the result expected in the output file
+    // FIRST LINE : number of common edges between the two subgraphs
+    cout << "------CONSTRUCTIVE------" << endl;
+    cout << subgraphs_Constructive_In[0].size()+subgraphs_Constructive_In[1].size() << " " << commonEdges_Constructive_in << endl;
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : subgraphs_Constructive_In[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : subgraphs_Constructive_In[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
+/*----------LOCAL-SEARCH----------*/
+    /* PARAMETERS FOR THE ALGORTIHM */
+    // Initialize the graph
+    GraphAdjacencyList graph_LocalSearchIn(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_ConstIn;
+    vector<vector<int>> subgraphs_LocalSearchIn;
+    // Reset the graph and rebuild it with a new number of vertices N
+    graph_LocalSearchIn.rebuildWithInFile(file);
+    // Execute the algorithm
+    subgraphs_ConstIn = ConstructiveHeuristic(graph_LocalSearchIn);
+    subgraphs_LocalSearchIn = LocalSearch(graph_LocalSearchIn, subgraphs_ConstIn);
+
+    /* PARAMETERS FOR THE FILE .out */
+    int commonEdges_LocalSearch_in;
+
+    /* Writing the result in the output file */
+    // compute the number of common edges between the two subgraphs
+    commonEdges_LocalSearch_in = calculEdgeCommun(graph_LocalSearchIn,subgraphs_LocalSearchIn);
+
+    // Directory to save the file
+    std::string directory_local_in = "../instances/local_search/";
+    // Write the result to the output file
+    std::string filename_local_in = fileNameIn + "_local_search.out";
+    WriteToFile(directory_local_in, filename_local_in, subgraphs_LocalSearchIn[0], subgraphs_LocalSearchIn[1], commonEdges_LocalSearch_in);
+
+    // print the result expected in the output file
+    cout << "------LOCAL------" << endl;
+    // FIRST LINE : number of common edges between the two subgraphs
+    cout << subgraphs_LocalSearchIn[0].size()+subgraphs_LocalSearchIn[1].size() << " " << commonEdges_LocalSearch_in << endl;
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : subgraphs_LocalSearchIn[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : subgraphs_LocalSearchIn[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
+/*----------TABU-SEARCH----------*/
+    /* PARAMETERS FOR THE ALGORTIHM */
+    // Initialize the graph
+    GraphAdjacencyList graph_TabuSearchIn(0);
+    // Initialize the subgraphs
+    vector<vector<int>> subgraphs_TabuSearchIn;
+    //Rebuild the graph
+    graph_TabuSearchIn.rebuildWithInFile(file);
+    //Execute the algorithm
+    subgraphs_TabuSearchIn = TabuSearch(graph_TabuSearchIn);
+
+    /* PARAMETERS FOR THE FILE .out */
+    int commonEdges_TabuSearch_in;
+
+    /* Writing the result in the output file */
+    // compute the number of common edges between the two subgraphs
+    commonEdges_TabuSearch_in = calculEdgeCommun(graph_TabuSearchIn,subgraphs_TabuSearchIn);
+
+    // Directory to save the file
+    std::string directory_tabu_in = "../instances/tabu_search/";
+    // Write the result to the output file
+    std::string filename_tabu_in = fileNameIn + "_tabu_search.out";
+    WriteToFile(directory_tabu_in, filename_tabu_in, subgraphs_TabuSearchIn[0], subgraphs_TabuSearchIn[1], commonEdges_TabuSearch_in);
+
+    // print the result expected in the output file
+    cout << "------TABU------" << endl;
+    // FIRST LINE : number of common edges between the two subgraphs
+    cout << subgraphs_TabuSearchIn[0].size()+subgraphs_TabuSearchIn[1].size() << " " << commonEdges_TabuSearch_in << endl;
+    // SECOND LINE : vertices of the first subgraph
+    cout << "V1 : ";
+    for(const int& element : subgraphs_TabuSearchIn[0]){
+        cout << element << " ";
+    }
+    cout << endl;
+    // THIRD LINE : vertices of the second subgraph
+    cout << "V2 : ";
+    for(const int& element : subgraphs_TabuSearchIn[1]){
+        cout << element << " ";
+    }
+    cout << endl;
+
 #endif
 
     cout << endl << " END OF THE PROGRAM, THANKS FOR USING IT ! :D " << endl;
